@@ -1,579 +1,3136 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerador de Prompts para IA</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #020617 0%, #0f172a 50%, #1e293b 100%);
-            min-height: 100vh;
-            color: #e2e8f0;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 24px;
-        }
-
-        .header {
-            margin-bottom: 48px;
-        }
-
-        .header-title {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-
-        .sparkles-icon {
-            width: 32px;
-            height: 32px;
-            color: #fbbf24;
-        }
-
-        h1 {
-            font-size: 36px;
-            font-weight: bold;
-            color: white;
-        }
-
-        .header-desc {
-            font-size: 18px;
-            color: #cbd5e1;
-        }
-
-        .grid-layout {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 24px;
-        }
-
-        .left-column {
-            grid-column: 1 / 3;
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-        }
-
-        .right-column {
-            grid-column: 3;
-            height: fit-content;
-            position: sticky;
-            top: 24px;
-        }
-
-        .card {
-            background-color: rgba(30, 41, 59, 0.5);
-            border: 1px solid #475569;
-            border-radius: 8px;
-            padding: 20px;
-        }
-
-        .card-header {
-            margin-bottom: 16px;
-        }
-
-        .card-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: white;
-            margin-bottom: 4px;
-        }
-
-        .card-description {
-            font-size: 14px;
-            color: #94a3b8;
-        }
-
-        .form-group {
-            margin-bottom: 16px;
-        }
-
-        textarea {
-            width: 100%;
-            min-height: 128px;
-            background-color: rgba(71, 85, 105, 0.3);
-            border: 1px solid #475569;
-            border-radius: 6px;
-            padding: 12px;
-            color: white;
-            font-family: inherit;
-            font-size: 14px;
-            resize: vertical;
-        }
-
-        textarea::placeholder {
-            color: #94a3b8;
-        }
-
-        textarea:focus {
-            outline: none;
-            border-color: #fbbf24;
-            background-color: rgba(71, 85, 105, 0.5);
-        }
-
-        .button-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
-
-        .option-button {
-            padding: 12px;
-            background-color: rgba(71, 85, 105, 0.2);
-            border: 2px solid #475569;
-            border-radius: 6px;
-            color: white;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-align: left;
-        }
-
-        .option-button:hover {
-            border-color: #64748b;
-        }
-
-        .option-button.selected {
-            border-color: #fbbf24;
-            background-color: rgba(251, 191, 36, 0.1);
-        }
-
-        .option-label {
-            font-weight: 500;
-            font-size: 14px;
-            margin-bottom: 4px;
-        }
-
-        .option-desc {
-            font-size: 12px;
-            color: #94a3b8;
-        }
-
-        .hairstyle-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
-
-        .style-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
-
-        .generate-button {
-            width: 100%;
-            padding: 24px;
-            background: linear-gradient(to right, #f59e0b, #d97706);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-weight: 600;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .generate-button:hover {
-            background: linear-gradient(to right, #d97706, #b45309);
-        }
-
-        .output-card {
-            background-color: rgba(30, 41, 59, 0.5);
-            border: 1px solid #475569;
-            border-radius: 8px;
-            padding: 20px;
-        }
-
-        .output-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 4px 12px;
-            background-color: rgba(148, 163, 184, 0.2);
-            border: 1px solid #64748b;
-            border-radius: 4px;
-            font-size: 12px;
-            color: #cbd5e1;
-        }
-
-        .prompt-display {
-            background-color: rgba(15, 23, 42, 0.5);
-            border: 1px solid #475569;
-            border-radius: 6px;
-            padding: 16px;
-            color: #cbd5e1;
-            font-size: 13px;
-            max-height: 400px;
-            overflow-y: auto;
-            white-space: pre-wrap;
-            word-break: break-word;
-            margin-bottom: 16px;
-            min-height: 200px;
-            font-family: 'Monaco', 'Courier New', monospace;
-        }
-
-        .empty-state {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 32px 0;
-            text-align: center;
-        }
-
-        .empty-icon {
-            width: 32px;
-            height: 32px;
-            opacity: 0.3;
-            margin-bottom: 8px;
-        }
-
-        .copy-button {
-            width: 100%;
-            padding: 10px;
-            background-color: transparent;
-            border: 1px solid #475569;
-            border-radius: 6px;
-            color: white;
-            font-weight: 500;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .copy-button:hover {
-            background-color: rgba(71, 85, 105, 0.3);
-            border-color: #64748b;
-        }
-
-        .copy-button.copied {
-            background-color: rgba(34, 197, 94, 0.1);
-            border-color: #22c55e;
-            color: #86efac;
-        }
-
-        @media (max-width: 1024px) {
-            .grid-layout {
-                grid-template-columns: 1fr;
-            }
-
-            .left-column {
-                grid-column: 1;
-            }
-
-            .right-column {
-                grid-column: 1;
-                position: static;
-            }
-
-            .button-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .hairstyle-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .style-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 640px) {
-            .button-grid,
-            .hairstyle-grid,
-            .style-grid {
-                grid-template-columns: 1fr;
-            }
-
-            h1 {
-                font-size: 28px;
-            }
-
-            .header-desc {
-                font-size: 14px;
-            }
-        }
-
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: rgba(15, 23, 42, 0.5);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #475569;
-            border-radius: 3px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #64748b;
-        }
-    </style>
-</head>
-<body>
-    <main class="container">
-        <div class="header">
-            <div class="header-title">
-                <svg class="sparkles-icon" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M13 2l3.29 3.29a1 1 0 0 0 .33.21l4.38 1.46a1 1 0 0 1 .37 1.74l-4.38 1.46a1 1 0 0 0-.33.21L13 14l-3.29-3.29a1 1 0 0 0-.33-.21l-4.38-1.46a1 1 0 0 1-.37-1.74l4.38-1.46a1 1 0 0 0 .33-.21L13 2M12 17l1.5 1.5a1 1 0 0 0 .33.21l2 .67a1 1 0 0 1 .37 1.74l-2 .67a1 1 0 0 0-.33.21L12 24l-1.5-1.5a1 1 0 0 0-.33-.21l-2-.67a1 1 0 0 1-.37-1.74l2-.67a1 1 0 0 0 .33-.21L12 17M3 9l1.5 1.5a1 1 0 0 0 .33.21l2 .67a1 1 0 0 1 .37 1.74l-2 .67a1 1 0 0 0-.33.21L3 15l-1.5-1.5a1 1 0 0 0-.33-.21l-2-.67a1 1 0 0 1-.37-1.74l2-.67a1 1 0 0 0 .33-.21L3 9z"/>
-                </svg>
-                <h1>Gerador de Prompts</h1>
-            </div>
-            <p class="header-desc">Crie prompts profissionais para geração de imagens hiper-realistas</p>
-        </div>
-
-        <div class="grid-layout">
-            <!-- Left Column -->
-            <div class="left-column">
-                <!-- Description Card -->
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">Descrição da Imagem</div>
-                        <div class="card-description">Descreva o que você deseja na imagem</div>
-                    </div>
-                    <textarea id="description" placeholder="Ex: mulher caminhando na praia ao pôr do sol, cabelo ao vento e expressão tranquila"></textarea>
-                </div>
-
-                <!-- Format Card -->
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">Formato</div>
-                        <div class="card-description">Escolha o tamanho da imagem</div>
-                    </div>
-                    <div class="button-grid">
-                        <button class="option-button selected" data-format="vertical">
-                            <div class="option-label">Vertical (1080x1920)</div>
-                            <div class="option-desc">Para retratos</div>
-                        </button>
-                        <button class="option-button" data-format="horizontal">
-                            <div class="option-label">Horizontal (16:9)</div>
-                            <div class="option-desc">Para cenas amplas</div>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Hairstyle Card -->
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">Estilo de Cabelo</div>
-                        <div class="card-description">Escolha como você deseja que o cabelo apareça</div>
-                    </div>
-                    <div class="hairstyle-grid">
-                        <button class="option-button selected hairstyle-option" data-hairstyle="Sem alteração">Sem alteração</button>
-                        <button class="option-button hairstyle-option" data-hairstyle="🌊 Ondas Soltas">🌊 Ondas Soltas</button>
-                        <button class="option-button hairstyle-option" data-hairstyle="💇 Liso Brilhante">💇 Liso Brilhante</button>
-                        <button class="option-button hairstyle-option" data-hairstyle="🌀 Cachos Definidos">🌀 Cachos Definidos</button>
-                        <button class="option-button hairstyle-option" data-hairstyle="🎀 Rabo de Cavalo">🎀 Rabo de Cavalo</button>
-                        <button class="option-button hairstyle-option" data-hairstyle="✨ Coque Alto">✨ Coque Alto</button>
-                        <button class="option-button hairstyle-option" data-hairstyle="🌙 Meia Praia">🌙 Meia Praia</button>
-                        <button class="option-button hairstyle-option" data-hairstyle="💃 Cabelo Curto">💃 Cabelo Curto</button>
-                        <button class="option-button hairstyle-option" data-hairstyle="🌸 Cabelo Comprido">🌸 Cabelo Comprido</button>
-                    </div>
-                </div>
-
-                <!-- Styles Card -->
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">Estilos Visuais</div>
-                        <div class="card-description">Selecione um ou mais estilos para sua imagem</div>
-                    </div>
-                    <div class="style-grid">
-                        <button class="option-button style-option" data-style="📸 Polaroid Vintage">📸 Polaroid Vintage</button>
-                        <button class="option-button style-option" data-style="🎞️ Preto e Branco Artístico">🎞️ P&B Artístico</button>
-                        <button class="option-button style-option" data-style="🌅 Golden Hour">🌅 Golden Hour</button>
-                        <button class="option-button style-option" data-style="🏙️ Urbana Neon">🏙️ Urbana Neon</button>
-                        <button class="option-button style-option" data-style="👔 Retrato Corporativo">👔 Corporativo</button>
-                        <button class="option-button style-option" data-style="💎 Editorial de Luxo">💎 Editorial de Luxo</button>
-                        <button class="option-button style-option" data-style="🌿 Retrato Externo Natural">🌿 Natural</button>
-                        <button class="option-button style-option" data-style="✨ Bokeh Suave">✨ Bokeh Suave</button>
-                        <button class="option-button style-option" data-style="❄️ Luz Fria / Urbana">❄️ Luz Fria</button>
-                    </div>
-                </div>
-
-                <!-- Generate Button -->
-                <button class="generate-button" id="generateBtn">
-                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M13 2l3.29 3.29a1 1 0 0 0 .33.21l4.38 1.46a1 1 0 0 1 .37 1.74l-4.38 1.46a1 1 0 0 0-.33.21L13 14l-3.29-3.29a1 1 0 0 0-.33-.21l-4.38-1.46a1 1 0 0 1-.37-1.74l4.38-1.46a1 1 0 0 0 .33-.21L13 2M12 17l1.5 1.5a1 1 0 0 0 .33.21l2 .67a1 1 0 0 1 .37 1.74l-2 .67a1 1 0 0 0-.33.21L12 24l-1.5-1.5a1 1 0 0 0-.33-.21l-2-.67a1 1 0 0 1-.37-1.74l2-.67a1 1 0 0 0 .33-.21L12 17M3 9l1.5 1.5a1 1 0 0 0 .33.21l2 .67a1 1 0 0 1 .37 1.74l-2 .67a1 1 0 0 0-.33.21L3 15l-1.5-1.5a1 1 0 0 0-.33-.21l-2-.67a1 1 0 0 1-.37-1.74l2-.67a1 1 0 0 0 .33-.21L3 9z"/>
-                    </svg>
-                    Gerar Prompt
-                </button>
-            </div>
-
-            <!-- Right Column -->
-            <div class="right-column">
-                <div class="output-card">
-                    <div class="output-header">
-                        <div class="card-title">Seu Prompt</div>
-                        <div id="badge" class="badge" style="display: none;">Pronto para copiar</div>
-                    </div>
-                    <div id="promptContainer">
-                        <div class="empty-state">
-                            <svg class="empty-icon" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M13 2l3.29 3.29a1 1 0 0 0 .33.21l4.38 1.46a1 1 0 0 1 .37 1.74l-4.38 1.46a1 1 0 0 0-.33.21L13 14l-3.29-3.29a1 1 0 0 0-.33-.21l-4.38-1.46a1 1 0 0 1-.37-1.74l4.38-1.46a1 1 0 0 0 .33-.21L13 2M12 17l1.5 1.5a1 1 0 0 0 .33.21l2 .67a1 1 0 0 1 .37 1.74l-2 .67a1 1 0 0 0-.33.21L12 24l-1.5-1.5a1 1 0 0 0-.33-.21l-2-.67a1 1 0 0 1-.37-1.74l2-.67a1 1 0 0 0 .33-.21L12 17M3 9l1.5 1.5a1 1 0 0 0 .33.21l2 .67a1 1 0 0 1 .37 1.74l-2 .67a1 1 0 0 0-.33.21L3 15l-1.5-1.5a1 1 0 0 0-.33-.21l-2-.67a1 1 0 0 1-.37-1.74l2-.67a1 1 0 0 0 .33-.21L3 9z"/>
-                            </svg>
-                            <p>Preencha os campos e clique em Gerar Prompt</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <script>
-        const STYLES = {
-            "📸 Polaroid Vintage": "Luz suave difusa, aparência de filme com granulação leve e vinheta discreta. Tons quentes, levemente desbotados, estética retrô com textura orgânica.",
-            "🎞️ Preto e Branco Artístico": "Iluminação de alto contraste, pretos profundos, realce controlado nas áreas claras. Estilo film noir com granulação sutil e atmosfera dramática.",
-            "🌅 Golden Hour": "Contraluz quente de pôr do sol, flare natural e sombras suaves. Pele iluminada com tom dourado, composição romântica e cinematográfica.",
-            "🏙️ Urbana Neon": "Reflexos de luz neon, bokeh de cidade ao fundo, atmosfera moderna e energética. Contraste médio e cores vibrantes com brilho controlado.",
-            "👔 Retrato Corporativo": "Fundo neutro, luz de estúdio equilibrada, aparência limpa e profissional. Fidelidade de pele e tecido com contraste moderado.",
-            "💎 Editorial de Luxo": "Luz key a 45° com rim sutil, recorte de contorno suave. Estilo de revista, foco em textura de pele e tecidos premium, acabamento refinado.",
-            "🌿 Retrato Externo Natural": "Iluminação difusa natural, sombras leves, tons suaves e realistas. Autenticidade e integração com o ambiente, sensação leve e natural.",
-            "✨ Bokeh Suave": "Luz direcionada no rosto, fundo propositalmente desfocado com bokeh cremoso. Cores neutras, foco preciso e contraste equilibrado.",
-            "❄️ Luz Fria / Urbana": "Tom azulado, key lateral e fill suave. Aparência contemporânea e cinematográfica, sensação de elegância e calma moderna."
-        };
-
-        const HAIRSTYLES = {
-            "Sem alteração": "Mantendo o cabelo exatamente como na foto original",
-            "🌊 Ondas Soltas": "Cabelo com ondas suaves e soltas, textura natural e movimentado, aparência descontraída",
-            "💇 Liso Brilhante": "Cabelo completamente liso e brilhante, acabamento refinado e sofisticado",
-            "🌀 Cachos Definidos": "Cabelo com cachos bem definidos e texturizados, volume natural e movimento elegante",
-            "🎀 Rabo de Cavalo": "Cabelo preso em rabo de cavalo limpo, penteado elegante e estruturado",
-            "✨ Coque Alto": "Cabelo em coque alto e volumoso, penteado sofisticado e polido",
-            "🌙 Meia Praia": "Cabelo preso na meia praia de forma descontraída, aspecto beach-casual",
-            "💃 Cabelo Curto": "Cabelo curto e bem cortado, corte moderno e bem definido",
-            "🌸 Cabelo Comprido": "Cabelo longo e voluminoso, caindo natural sobre os ombros e costas"
-        };
-
-        let selectedStyles = [];
-        let selectedHairstyle = "Sem alteração";
-        let selectedFormat = "vertical";
-
-        // Format buttons
-        document.querySelectorAll('[data-format]').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                document.querySelectorAll('[data-format]').forEach(b => b.classList.remove('selected'));
-                e.target.closest('[data-format]').classList.add('selected');
-                selectedFormat = e.target.closest('[data-format]').dataset.format;
-            });
-        });
-
-        // Hairstyle buttons
-        document.querySelectorAll('.hairstyle-option').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                document.querySelectorAll('.hairstyle-option').forEach(b => b.classList.remove('selected'));
-                e.target.closest('.hairstyle-option').classList.add('selected');
-                selectedHairstyle = e.target.closest('.hairstyle-option').dataset.hairstyle;
-            });
-        });
-
-        // Style buttons
-        document.querySelectorAll('.style-option').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const style = e.target.closest('.style-option').dataset.style;
-                e.target.closest('.style-option').classList.toggle('selected');
-                
-                if (selectedStyles.includes(style)) {
-                    selectedStyles = selectedStyles.filter(s => s !== style);
-                } else {
-                    selectedStyles.push(style);
-                }
-            });
-        });
-
-        // Generate prompt
-        document.getElementById('generateBtn').addEventListener('click', () => {
-            const description = document.getElementById('description').value;
-            let prompt = "Crie uma imagem hiper-realista em 8K mantendo exatamente o rosto, tom de pele e identidade corporal da pessoa da foto enviada — sem alterações físicas.\n\n";
-
-            if (selectedHairstyle !== "Sem alteração") {
-                prompt += `Modificação de Cabelo:\n${HAIRSTYLES[selectedHairstyle]}\n\n`;
-            }
-
-            if (description) {
-                prompt += `Com base na descrição: ${description}\n\n`;
-            }
-
-            if (selectedStyles.length > 0) {
-                prompt += "Modificadores de estilo:\n";
-                selectedStyles.forEach((style) => {
-                    prompt += `• ${style}\n${STYLES[style]}\n\n`;
-                });
-            }
-
-            prompt += `Detalhes técnicos:\n`;
-            prompt += `• Lente: 50mm ou 85mm f/1.8\n`;
-            prompt += `• Enquadramento: ${selectedFormat === "vertical" ? "vertical, foco no rosto e textura realista da pele" : "horizontal, cena ampla"}\n`;
-            prompt += `• Estilo: realismo elevado, fidelidade fotográfica, iluminação cinematográfica\n`;
-            prompt += `• Acabamento: nítido, equilibrado, natural\n\n`;
-            prompt += `Negativas: sem distorções, sem pele plástica, sem exageros de nitidez, sem alteração facial, sem artefatos digitais.`;
-
-            const container = document.getElementById('promptContainer');
-            container.innerHTML = `
-                <div class="prompt-display">${escapeHtml(prompt)}</div>
-                <button class="copy-button" onclick="copyPrompt('${escapeJs(prompt)}')">
-                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
-                    </svg>
-                    Copiar Prompt
-                </button>
-            `;
-            document.getElementById('badge').style.display = 'block';
-        });
-
-        function copyPrompt(text) {
-            navigator.clipboard.writeText(text).then(() => {
-                const btn = event.target.closest('.copy-button');
-                const originalText = btn.innerHTML;
-                btn.classList.add('copied');
-                btn.innerHTML = '<svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg> Copiado!';
-                setTimeout(() => {
-                    btn.classList.remove('copied');
-                    btn.innerHTML = originalText;
-                }, 2000);
-            });
-        }
-
-        function escapeHtml(text) {
-            const map = {
-                '&': '&amp;',
-                '<': '&lt;',
-                '>': '&gt;',
-                '"': '&quot;',
-                "'": '&#039;'
-            };
-            return text.replace(/[&<>"']/g, m => map[m]);
-        }
-
-        function escapeJs(text) {
-            return text.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\n/g, '\\n');
-        }
-    </script>
-</body>
-</html>
+ (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
+diff --git a/index.html b/index.html
+index 3bf954916a47b68c8a9d3145b26e30d3f11eb69c..26f71d8e3e11ab70d4e1451146485e971a10e975 100644
+--- a/index.html
++++ b/index.html
+@@ -1,235 +1,2896 @@
+ <!DOCTYPE html>
+ <html lang="pt-BR">
+-<head>
+-<meta charset="UTF-8">
+-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+-<title>Landing Page - Estilos de Foto</title>
+-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+-<style>
+-/* Reset */
+-* { margin:0; padding:0; box-sizing:border-box; }
+-body { font-family:'Segoe UI', sans-serif; background:#f9f9f9; color:#333; }
+-
+-/* Hero */
+-header {
+-  background: linear-gradient(135deg, #4a90e2, #6a11cb);
+-  color:#fff; text-align:center; padding:5rem 1rem 3rem;
+-}
+-header h1 { font-size:2.8rem; margin-bottom:1rem; }
+-header p { font-size:1.2rem; margin-bottom:2rem; color:#e9e9e9; }
+-.video-container { display:flex; justify-content:center; margin-bottom:1.5rem; }
+-.video-container iframe { width:100%; max-width:800px; height:450px; border-radius:16px; }
+-
+-/* Botões */
+-.button-group {
+-  display:flex; flex-wrap:wrap; justify-content:center; gap:1rem;
+-}
+-.buy-button {
+-  display:inline-flex; align-items:center; gap:10px;
+-  background: linear-gradient(90deg, #ff6b6b, #f94d6a);
+-  color:#fff; padding:1rem 2.2rem; border-radius:30px; font-size:1.1rem;
+-  text-decoration:none; font-weight:bold; transition:.3s;
+-}
+-.buy-button:hover { transform:translateY(-3px); box-shadow:0 6px 20px rgba(249,77,106,.4); }
+-
+-.ebook-button {
+-  display:inline-flex; align-items:center; gap:10px;
+-  background: linear-gradient(90deg, #4a90e2, #50c9ce);
+-  color:#fff; padding:1rem 2.2rem; border-radius:30px; font-size:1.1rem;
+-  text-decoration:none; font-weight:bold; transition:.3s;
+-}
+-.ebook-button:hover { transform:translateY(-3px); box-shadow:0 6px 20px rgba(74,144,226,.4); }
+-
+-.mentoria-button {
+-  display:inline-flex; align-items:center; gap:10px;
+-  background: linear-gradient(90deg, #6a11cb, #b91372);
+-  color:#fff; padding:1rem 2.2rem; border-radius:30px; font-size:1.1rem;
+-  text-decoration:none; font-weight:bold; transition:.3s;
+-}
+-.mentoria-button:hover { transform:translateY(-3px); box-shadow:0 6px 20px rgba(185,19,114,.4); }
+-
+-/* Galeria */
+-.gallery-container { padding:4rem 1rem; background:#fff; }
+-.gallery-container h2 {
+-  text-align:center; font-size:2rem; margin-bottom:2rem; color:#333;
+-}
+-.gallery-container h2 i { margin-right:10px; color:#6a11cb; }
+-.gallery {
+-  display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+-  gap:2rem; max-width:1200px; margin:auto;
+-}
+-.card {
+-  background:#fff; border-radius:16px; overflow:hidden;
+-  box-shadow:0 8px 25px rgba(0,0,0,.1); transition:.3s;
+-  display:flex; flex-direction:column; height:100%;
+-}
+-.card:hover { transform:translateY(-6px); box-shadow:0 12px 35px rgba(0,0,0,.15); }
+-.card-content { 
+-  padding:1.2rem; text-align:center; 
+-  flex-grow:1; display:flex; flex-direction:column; justify-content:space-between;
+-}
+-.card-content h3 { margin-bottom:.8rem; font-size:1.3rem; color:#333; }
+-
+-/* Prompt */
+-.prompt-box {
+-  margin-top:.8rem; padding:.8rem; background:#eef2f7;
+-  border-radius:8px; font-size:.95rem;
+-  max-height:120px; overflow-y:auto;
+-  text-align:left;
+-}
+-.prompt-box::-webkit-scrollbar { width:6px; }
+-.prompt-box::-webkit-scrollbar-thumb { background:#bbb; border-radius:6px; }
+-.prompt-box::-webkit-scrollbar-track { background:transparent; }
+-
+-.copy-btn {
+-  margin-top:1rem; background:linear-gradient(90deg,#4a90e2,#6a11cb);
+-  color:#fff; border:none; padding:.6rem 1.4rem; border-radius:30px;
+-  cursor:pointer; font-size:.95rem; transition:.3s;
+-}
+-.copy-btn:hover { opacity:.9; }
+-
+-/* Antes/Depois Slider */
+-.before-after {
+-  position:relative; width:100%; overflow:hidden;
+-}
+-.before-after img {
+-  display:block; width:100%; height:auto;
+-}
+-.before-after .after-wrapper {
+-  position:absolute; top:0; left:0; height:100%; width:50%;
+-  overflow:hidden; transition:width .2s ease;
+-}
+-.before-after .after-wrapper img { width:100%; height:100%; object-fit:cover; }
+-.slider-handle {
+-  position:absolute; top:0; left:50%; transform:translateX(-50%);
+-  width:6px; height:100%; background:linear-gradient(180deg,#6a11cb,#4a90e2);
+-  border-radius:4px; cursor:ew-resize; z-index:5;
+-  display:flex; align-items:center; justify-content:center;
+-}
+-.slider-handle::before {
+-  content:"\f337"; /* ícone de arrastar FontAwesome */
+-  font-family:"Font Awesome 6 Free"; font-weight:900;
+-  color:#fff; font-size:1.2rem;
+-  background:rgba(0,0,0,0.3); padding:6px; border-radius:50%;
+-}
+-
+-/* Responsivo */
+-@media(max-width:768px){
+-  header h1 { font-size:2.2rem; }
+-  .video-container iframe { height:280px; }
+-  .button-group { flex-direction:column; align-items:center; }
+-}
+-</style>
+-</head>
+-<body>
+-
+-<header>
+-  <h1><i class="fa-solid fa-camera-retro"></i> Descubra o Estilo Ideal de Sua Foto</h1>
+-  <p>Veja exemplos de antes e depois e copie os prompts para gerar imagens incríveis</p>
+-  <div class="video-container">
+-    <iframe 
+-    width="560" 
+-    height="315" 
+-    src="https://www.youtube.com/embed/Bif_5h8k8_A" 
+-    frameborder="0" 
+-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+-    allowfullscreen>
+-</iframe>
+-  </div>
+-
+-  <!-- Grupo de botões -->
+-  <div class="button-group">
+-    <a href="https://www.seusite.com/curso" class="buy-button">
+-      <i class="fa-solid fa-cart-shopping"></i> Comprar Curso Agora
+-    </a>
+-
+-    <a href="https://www.seusite.com/ebook-gratuito.pdf" download class="ebook-button">
+-      <i class="fa-solid fa-book-open"></i> Ebook Gratuito
+-    </a>
+-
+-    <a href="https://wa.me/49988971962?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20a%20mentoria." target="_blank" class="mentoria-button">
+-      <i class="fa-solid fa-user-graduate"></i> Contato para Mentoria
+-    </a>
+-  </div>
+-</header>
+-
+-<section class="gallery-container">
+-  <h2><i class="fa-solid fa-image"></i> Galeria Antes e Depois</h2>
+-  <div class="gallery" id="gallery"></div>
+-</section>
+-
+-<script>
+-const styles = [
+-  {
+-    name:"Mulher cinematografica",
+-    before:"2.jpeg",
+-    after:"1.jpeg",
+-    prompt:"Retrato pessoal high-end, ultra realista da pessoa na foto fornecida, preservando sua fisionomia, idade aparente, gênero, tom de pele, cabelo, olhos e expressão única. não distorça traços, sem mudança de idade ou gênero, sem pele morta, sem roupa inventadas, exceto o contingente indicado, sem dedos ou buracos extras, sem ruídos, sem texto ou marcas de d'água.texturas foto realista de pele, cabelos e tecido.assunto principal é uma mulher com cabelos soltos e peitos bagunçado, com uma tonalidade marrom escura. Seu cabelo é brilhante iluminado por trás, criando um Halo Dourado luminoso que contrasta nitidamente com o fundo escuro.expressão e pose: ela vira o rosto para câmera, com o olhar diretamente, mas principalmente coberto por sombras. sua boca está ligeiramente entreaberta, ok adiciona um ar expressivo em líquido a foto. O peito no e atira fina de uma roupa quase invisível sugerem um retrato artístico, mais sensual do que documental iluminação luz de fundo muito potente e quente provavelmente com um gel amarelo, laranja, que banho ou contorno do cabelo. uma fonte secundária fria ( luz verde) ilumina o rosto e parte do peito, criando um contraste de cores completamente (quente no cabelo, frio na pele).o fundo é completamente escuro o que isola completamente a modelo e destaca o brilho nos seus cabelos. cor e atmosfera: a imagem joga com o esquema de duas cores quente frio. O resultado é dramático, cinematográfico e com um toque estéreo.lente fixa (prime) entre 50 mm e 85 mm em formato full frame.isso pode ser deduzido pela compreensão suave do rosto e dos ombros, típica das lentes de retratoabertura ampla (f / 1,4 - f / 2.8).gênero fotográfico: retrato artístico com uma forte intenção dramático."
+-  },
+-  {
+-    name:"Foto de formatura",
+-    before:"8.jpeg",
+-    after:"7.jpeg",
+-    prompt:"Retrato de um casal jovem em estilo de fotografia de formatura ou evento formal. O homem veste um terno azul marinho de alta alfaiataria com uma camisa branca e gravata preta, com sombras profundas para um visual sofisticado. A mulher está ao lado dele, vestindo um vestido elegante em tom pastel, com maquiagem suave e cabelos bem penteados. Fundo branco limpo. Fotografia de alta qualidade, 8K, com iluminação de estúdio que cria sombras profundas e suaves."
+-  },
+-  {
+-    name:"Homem de terno",
+-    before:"6.jpeg",
+-    after:"5.jpeg",
+-    prompt:"Faça um retrato profissional da pessoa da imagem, sombras profundas, fundo branco, fotografia alta resolução, 8K, estilo corporativo com terno azul escuro de alta alfaiataria."
+-  },
+-  {
+-    name:"Paisagem noturna",
+-    before:"11.jpeg",
+-    after:"3.jpeg",
+-    prompt:"Crie um retrato vertical hiper-realista em preto e branco do homem da foto enviada, em pé em uma rua urbana noturna, vestindo terno preto de corte perfeito e camisa branca. Ele segura um guarda-chuva fechado em uma das mãos e olha para o lado, iluminado apenas por um poste de luz, que cria sombras fortes e contraste dramático. O chão molhado reflete a luz, ampliando o clima noir."
+-  },
+-  {
+-    name:"Mundo corporativo",
+-    before:"10.jpeg",
+-    after:"9.jpeg",
+-    prompt:"Crie um retrato vertical hiper-realista em preto e branco do homem da foto enviada, em pé em uma rua urbana noturna, vestindo terno preto de corte perfeito e camisa branca. Ele segura um guarda-chuva fechado em uma das mãos e olha para o lado, iluminado apenas por um poste de luz, que cria sombras fortes e contraste dramático. O chão molhado reflete a luz, ampliando o clima noir."
+-  }
+-];
+-
+-const gallery = document.getElementById("gallery");
+-
+-styles.forEach(style => {
+-  const card = document.createElement("div");
+-  card.className = "card";
+-  card.innerHTML = `
+-    <div class="before-after" onmousemove="moveSlider(event,this)" ontouchmove="moveSlider(event.touches[0],this)">
+-      <img src="${style.before}" alt="${style.name} antes">
+-      <div class="after-wrapper">
+-        <img src="${style.after}" alt="${style.name} depois">
++  <head>
++    <!-- Google Tag Manager -->
++    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
++new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
++j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
++'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
++})(window,document,'script','dataLayer','GTM-K5NK3XV6');</script>
++    <!-- End Google Tag Manager -->
++    <meta charset="UTF-8" />
++    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
++    <title>I.A. Me Clonei – Curso de IA</title>
++    <!-- Google tag (gtag.js) -->
++    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RS1MRE15W1"></script>
++    <script>
++      window.dataLayer = window.dataLayer || [];
++      function gtag() {
++        dataLayer.push(arguments);
++      }
++      gtag("js", new Date());
++
++      gtag("config", "G-RS1MRE15W1");
++    </script>
++    <link rel="preconnect" href="https://fonts.googleapis.com" />
++    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
++    <link
++      rel="stylesheet"
++      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
++    />
++    <link
++      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap"
++      rel="stylesheet"
++    />
++    <style>
++      :root {
++        --primary: #00f0ff;
++        --secondary: #ff4dff;
++        --accent: #8b5dff;
++        --dark: #040013;
++        --light: #090019;
++        --gray: #b0a9d9;
++        --text: #f4f3ff;
++        --gradient: linear-gradient(135deg, rgba(0, 240, 255, 0.92), rgba(255, 77, 255, 0.92));
++        --glass: rgba(10, 4, 32, 0.7);
++      }
++
++      * {
++        margin: 0;
++        padding: 0;
++        box-sizing: border-box;
++      }
++
++      body {
++        font-family: "Montserrat", sans-serif;
++        color: var(--text);
++        background: radial-gradient(circle at 20% 20%, rgba(255, 77, 255, 0.12), transparent 45%),
++          radial-gradient(circle at 80% 0%, rgba(0, 240, 255, 0.15), transparent 50%),
++          var(--dark);
++        line-height: 1.7;
++        min-height: 100vh;
++        position: relative;
++        z-index: 0;
++        overflow-x: hidden;
++        font-weight: 500;
++      }
++
++      p {
++        font-size: clamp(1.05rem, 2.3vw, 1.22rem);
++      }
++
++      p,
++      li,
++      .section-text,
++      .section-lede,
++      .story-text,
++      .module-copy,
++      .offer-text,
++      .cta-caption {
++        font-weight: 500;
++        letter-spacing: 0.01em;
++      }
++
++      body::before,
++      body::after {
++        content: "";
++        position: fixed;
++        inset: -30%;
++        pointer-events: none;
++        z-index: -2;
++      }
++
++      body::before {
++        background: radial-gradient(circle at 15% 20%, rgba(0, 240, 255, 0.25), transparent 55%),
++          radial-gradient(circle at 85% 75%, rgba(255, 77, 255, 0.2), transparent 60%);
++        filter: blur(90px);
++        opacity: 0.85;
++      }
++
++      body::after {
++        background-image: linear-gradient(135deg, rgba(0, 240, 255, 0.08), rgba(255, 77, 255, 0.08)),
++          linear-gradient(90deg, rgba(0, 240, 255, 0.08) 1px, transparent 1px),
++          linear-gradient(0deg, rgba(255, 77, 255, 0.08) 1px, transparent 1px);
++        background-size: cover, 180px 180px, 180px 180px;
++        mix-blend-mode: screen;
++        opacity: 0.65;
++        z-index: -1;
++      }
++
++      header,
++      main,
++      footer {
++        position: relative;
++        z-index: 1;
++      }
++
++      a {
++        color: inherit;
++        text-decoration: none;
++      }
++
++      .container {
++        width: min(1200px, 92vw);
++        margin: 0 auto;
++      }
++
++      .container.hero {
++        width: min(1280px, 94vw);
++      }
++
++      .sr-only {
++        position: absolute;
++        width: 1px;
++        height: 1px;
++        padding: 0;
++        margin: -1px;
++        overflow: hidden;
++        clip: rect(0, 0, 0, 0);
++        white-space: nowrap;
++        border: 0;
++      }
++
++      header {
++        background: linear-gradient(160deg, rgba(4, 0, 19, 0.92), rgba(26, 0, 54, 0.92));
++        color: #fff;
++        padding: 2rem 0 6rem;
++        position: relative;
++        overflow: hidden;
++        box-shadow: 0 40px 120px rgba(0, 0, 0, 0.6);
++      }
++
++      header::before {
++        content: "";
++        position: absolute;
++        inset: -10%;
++        background: conic-gradient(from 120deg at 50% 50%, rgba(0, 240, 255, 0.18), rgba(255, 77, 255, 0.25), rgba(0, 240, 255, 0.18));
++        filter: blur(60px);
++        opacity: 0.9;
++      }
++
++      header::after {
++        content: none;
++      }
++
++      .hero {
++        position: relative;
++        display: flex;
++        flex-direction: column;
++        align-items: center;
++        justify-content: center;
++        gap: 2.5rem;
++        z-index: 2;
++        text-align: center;
++      }
++
++      .hero-heading,
++      .hero-content {
++        max-width: min(900px, 100%);
++        margin: 0 auto;
++      }
++
++      .hero-heading {
++        display: grid;
++        gap: 0.75rem;
++        justify-items: center;
++      }
++
++      .hero-title {
++        font-size: clamp(3rem, 7vw, 4.6rem);
++        font-weight: 900;
++        letter-spacing: 0.015em;
++        text-align: center;
++        color: #0b001f;
++        padding: 1rem 1.5rem;
++        border-radius: 32px;
++        background: linear-gradient(135deg, #00f0ff, #ff4dff);
++        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55), 0 0 55px rgba(0, 240, 255, 0.35);
++      }
++
++      .hero-subhead {
++        font-size: clamp(1.1rem, 2.4vw, 1.35rem);
++        color: rgba(244, 243, 255, 0.92);
++        text-align: center;
++        background: linear-gradient(120deg, rgba(0, 240, 255, 0.16), rgba(255, 77, 255, 0.14));
++        border: 1px solid rgba(0, 240, 255, 0.28);
++        padding: 1rem 1.2rem;
++        border-radius: 18px;
++        max-width: 880px;
++        box-shadow: inset 0 0 26px rgba(255, 77, 255, 0.14), 0 18px 45px rgba(0, 0, 0, 0.5);
++      }
++
++      .hero-content {
++        display: grid;
++        gap: 1rem;
++        justify-items: center;
++      }
++
++      .hero-intro-block {
++        display: grid;
++        gap: 1rem;
++        text-align: center;
++        max-width: 1040px;
++        margin: 0 auto;
++        padding: clamp(1.4rem, 3vw, 2rem) clamp(1.6rem, 3.6vw, 2.4rem);
++        background: rgba(4, 0, 19, 0.7);
++        border: 1px solid rgba(0, 240, 255, 0.3);
++        border-radius: 28px;
++        box-shadow: inset 0 0 35px rgba(255, 77, 255, 0.12), 0 24px 60px rgba(0, 0, 0, 0.55);
++      }
++
++      .hero-promise {
++        font-size: clamp(2.3rem, 5vw, 3rem);
++        line-height: 1.2;
++        color: #fff;
++        text-shadow: 0 0 25px rgba(0, 240, 255, 0.5);
++      }
++
++      .hero-sublead {
++        background: rgba(4, 0, 19, 0.55);
++        border: 1px solid rgba(0, 240, 255, 0.28);
++        padding: 1.1rem 1.3rem;
++        border-radius: 18px;
++        color: rgba(244, 243, 255, 0.92);
++        line-height: 1.7;
++        box-shadow: inset 0 0 20px rgba(0, 240, 255, 0.14);
++      }
++
++      .hero-benefits {
++        list-style: none;
++        display: grid;
++        gap: 0.55rem;
++        padding: 0;
++        margin: 0;
++        color: rgba(244, 243, 255, 0.92);
++      }
++
++      .hero-benefits li {
++        display: flex;
++        align-items: center;
++        gap: 0.65rem;
++        padding: 0.85rem 1rem;
++        border-radius: 12px;
++        background: rgba(4, 0, 19, 0.6);
++        border: 1px solid rgba(0, 240, 255, 0.22);
++        box-shadow: inset 0 0 18px rgba(255, 77, 255, 0.12);
++        font-weight: 700;
++        letter-spacing: 0.01em;
++      }
++
++      .prompt-section {
++        align-items: stretch;
++        gap: 2.2rem;
++      }
++
++      .prompt-header {
++        display: grid;
++        gap: 0.75rem;
++        justify-items: center;
++        text-align: center;
++      }
++
++      .prompt-title-row {
++        display: inline-flex;
++        align-items: center;
++        gap: 0.6rem;
++        padding: 0.6rem 1.2rem;
++        border-radius: 999px;
++        background: rgba(4, 0, 19, 0.65);
++        border: 1px solid rgba(0, 240, 255, 0.28);
++        box-shadow: 0 0 22px rgba(0, 240, 255, 0.28);
++      }
++
++      .sparkles-icon {
++        font-size: 1.2rem;
++        color: var(--primary);
++        text-shadow: 0 0 14px rgba(0, 240, 255, 0.6);
++      }
++
++      .prompt-layout {
++        display: grid;
++        grid-template-columns: minmax(0, 1.7fr) minmax(320px, 1fr);
++        gap: clamp(1.6rem, 3vw, 2.4rem);
++        width: 100%;
++      }
++
++      .prompt-left,
++      .prompt-right {
++        display: grid;
++        gap: 1.4rem;
++      }
++
++      .prompt-card,
++      .output-card {
++        background: rgba(4, 0, 19, 0.72);
++        border: 1px solid rgba(0, 240, 255, 0.26);
++        border-radius: 22px;
++        padding: clamp(1.1rem, 2vw, 1.6rem);
++        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55), inset 0 0 24px rgba(255, 77, 255, 0.14);
++      }
++
++      .prompt-card-header,
++      .output-header {
++        display: flex;
++        align-items: center;
++        justify-content: space-between;
++        gap: 0.8rem;
++        margin-bottom: 0.75rem;
++      }
++
++      .prompt-card-title {
++        font-size: 1.05rem;
++        font-weight: 800;
++        color: #fff;
++        letter-spacing: 0.02em;
++      }
++
++      .prompt-card-description {
++        color: rgba(244, 243, 255, 0.76);
++        font-size: 0.95rem;
++      }
++
++      .prompt-textarea {
++        width: 100%;
++        min-height: 140px;
++        background: rgba(6, 0, 22, 0.8);
++        border: 1px solid rgba(0, 240, 255, 0.26);
++        border-radius: 14px;
++        padding: 1rem 1.1rem;
++        color: #fff;
++        font-family: "Montserrat", sans-serif;
++        font-size: 1rem;
++        resize: vertical;
++        box-shadow: inset 0 0 16px rgba(0, 240, 255, 0.14);
++      }
++
++      .prompt-textarea::placeholder {
++        color: rgba(244, 243, 255, 0.65);
++      }
++
++      .prompt-textarea:focus {
++        outline: none;
++        border-color: rgba(255, 77, 255, 0.6);
++        box-shadow: 0 0 18px rgba(255, 77, 255, 0.3);
++      }
++
++      .prompt-button-grid,
++      .prompt-hairstyle-grid,
++      .prompt-style-grid {
++        display: grid;
++        gap: 0.85rem;
++      }
++
++      .prompt-button-grid {
++        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
++      }
++
++      .prompt-hairstyle-grid {
++        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
++      }
++
++      .prompt-style-grid {
++        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
++      }
++
++      .option-button {
++        text-align: left;
++        padding: 0.85rem 1rem;
++        border-radius: 14px;
++        background: rgba(6, 0, 22, 0.78);
++        border: 1px solid rgba(0, 240, 255, 0.2);
++        color: #fff;
++        cursor: pointer;
++        transition: border 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
++        display: grid;
++        gap: 0.2rem;
++      }
++
++      .option-button:hover {
++        border-color: rgba(255, 77, 255, 0.55);
++        box-shadow: 0 0 20px rgba(0, 240, 255, 0.22);
++        transform: translateY(-1px);
++      }
++
++      .option-button.selected {
++        border-color: rgba(255, 77, 255, 0.8);
++        background: linear-gradient(135deg, rgba(0, 240, 255, 0.16), rgba(255, 77, 255, 0.14));
++        box-shadow: 0 0 26px rgba(255, 77, 255, 0.35);
++      }
++
++      .option-label {
++        font-weight: 800;
++        letter-spacing: 0.02em;
++      }
++
++      .option-desc {
++        font-size: 0.9rem;
++        color: rgba(244, 243, 255, 0.76);
++      }
++
++      .generate-button {
++        width: 100%;
++        display: inline-flex;
++        align-items: center;
++        justify-content: center;
++        gap: 0.65rem;
++        padding: 1rem 1.4rem;
++        border-radius: 16px;
++        background: var(--gradient);
++        color: #050015;
++        font-weight: 800;
++        font-size: 1.05rem;
++        border: none;
++        cursor: pointer;
++        box-shadow: 0 24px 60px rgba(0, 240, 255, 0.32), 0 0 28px rgba(255, 77, 255, 0.26);
++        transition: transform 0.25s ease, box-shadow 0.25s ease;
++      }
++
++      .generate-button:hover {
++        transform: translateY(-2px);
++        box-shadow: 0 32px 70px rgba(255, 77, 255, 0.38);
++      }
++
++      .gemini-cta {
++        display: inline-flex;
++        align-items: center;
++        justify-content: center;
++        gap: 0.65rem;
++        width: 100%;
++        margin: 0.85rem 0 0.35rem;
++        padding: 0.95rem 1.2rem;
++        border-radius: 16px;
++        background: linear-gradient(125deg, rgba(0, 240, 255, 0.95), rgba(255, 77, 255, 0.92));
++        color: #050015;
++        font-weight: 850;
++        letter-spacing: 0.02em;
++        box-shadow: 0 24px 60px rgba(0, 240, 255, 0.32), 0 0 30px rgba(255, 77, 255, 0.32);
++        border: 1px solid rgba(0, 240, 255, 0.32);
++        transition: transform 0.25s ease, box-shadow 0.25s ease;
++      }
++
++      .gemini-cta:hover {
++        transform: translateY(-2px);
++        box-shadow: 0 32px 72px rgba(255, 77, 255, 0.42), 0 0 34px rgba(0, 240, 255, 0.35);
++      }
++
++      .gemini-note {
++        margin: 0 0 0.8rem;
++        font-size: 0.98rem;
++        color: rgba(244, 243, 255, 0.86);
++        text-align: center;
++        line-height: 1.5;
++      }
++
++      .output-card .badge {
++        background: rgba(0, 240, 255, 0.16);
++        border: 1px solid rgba(0, 240, 255, 0.45);
++        padding: 0.35rem 0.8rem;
++        border-radius: 12px;
++        color: #e6f9ff;
++        letter-spacing: 0.05em;
++      }
++
++      .prompt-container {
++        background: rgba(6, 0, 22, 0.9);
++        border: 1px dashed rgba(0, 240, 255, 0.28);
++        border-radius: 14px;
++        padding: 1.1rem;
++        min-height: 220px;
++      }
++
++      .prompt-display {
++        background: rgba(4, 0, 19, 0.78);
++        border: 1px solid rgba(255, 77, 255, 0.25);
++        border-radius: 12px;
++        padding: 1rem 1.1rem;
++        color: #e8e6ff;
++        font-family: "Courier New", monospace;
++        white-space: pre-wrap;
++        line-height: 1.55;
++        box-shadow: inset 0 0 18px rgba(0, 240, 255, 0.14);
++        margin-bottom: 0.9rem;
++      }
++
++      .copy-button {
++        width: 100%;
++        padding: 0.9rem 1rem;
++        border-radius: 12px;
++        background: transparent;
++        border: 1px solid rgba(0, 240, 255, 0.28);
++        color: #fff;
++        font-weight: 700;
++        cursor: pointer;
++        display: inline-flex;
++        align-items: center;
++        justify-content: center;
++        gap: 0.5rem;
++        transition: border 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
++      }
++
++      .copy-button:hover {
++        border-color: rgba(255, 77, 255, 0.6);
++        box-shadow: 0 0 18px rgba(0, 240, 255, 0.24);
++        transform: translateY(-1px);
++      }
++
++      .copy-button.copied {
++        border-color: rgba(0, 240, 255, 0.85);
++        background: rgba(0, 240, 255, 0.08);
++        color: #d5faff;
++      }
++
++      .empty-state {
++        display: grid;
++        place-items: center;
++        gap: 0.6rem;
++        color: rgba(244, 243, 255, 0.78);
++        text-align: center;
++        min-height: 120px;
++      }
++
++      .empty-icon {
++        font-size: 1.4rem;
++        opacity: 0.6;
++      }
++
++      .gallery-section .container {
++        display: grid;
++        gap: 1.4rem;
++      }
++
++      .gallery-grid {
++        display: grid;
++        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
++        gap: 1rem;
++      }
++
++      .gallery-grid img {
++        width: 100%;
++        height: 100%;
++        object-fit: cover;
++        border-radius: 14px;
++        border: 1px solid rgba(0, 240, 255, 0.2);
++        box-shadow: 0 18px 45px rgba(0, 0, 0, 0.5), 0 0 26px rgba(0, 240, 255, 0.16);
++      }
++
++      .hero-subtitle {
++        background: linear-gradient(120deg, rgba(0, 240, 255, 0.12), rgba(255, 77, 255, 0.08));
++        border-left: 3px solid rgba(255, 77, 255, 0.55);
++        padding: 1rem 1.25rem;
++        border-radius: 18px;
++        box-shadow: 0 20px 45px rgba(0, 240, 255, 0.18);
++        display: inline-block;
++        text-align: left;
++        max-width: 780px;
++        margin: 0 auto;
++      }
++
++      .hero-support {
++        background: rgba(4, 0, 19, 0.65);
++        border: 1px solid rgba(0, 240, 255, 0.25);
++        padding: 1.2rem 1.35rem;
++        border-radius: 20px;
++        backdrop-filter: blur(8px);
++        box-shadow: inset 0 0 25px rgba(255, 77, 255, 0.12), 0 18px 40px rgba(0, 0, 0, 0.45);
++        opacity: 0.95;
++        text-align: left;
++        max-width: 720px;
++        margin: 0 auto;
++      }
++
++      .hero-support-title {
++        font-weight: 800;
++        letter-spacing: 0.02em;
++        text-transform: uppercase;
++        color: #fff;
++        margin-bottom: 0.75rem;
++      }
++
++      .hero-microcopy {
++        font-size: 0.98rem;
++        margin-top: 0.25rem;
++        max-width: 480px;
++        color: rgba(244, 243, 255, 0.82);
++        text-align: center;
++      }
++
++      .hero-badges {
++        display: flex;
++        flex-wrap: wrap;
++        gap: 1rem;
++        margin-bottom: 1.5rem;
++        justify-content: center;
++      }
++
++      .badge {
++        background: rgba(4, 0, 19, 0.55);
++        border: 1px solid rgba(0, 240, 255, 0.5);
++        border-radius: 999px;
++        padding: 0.6rem 1.2rem;
++        font-weight: 600;
++        display: inline-flex;
++        align-items: center;
++        gap: 0.5rem;
++        box-shadow: 0 0 15px rgba(0, 240, 255, 0.35);
++      }
++
++      .cta-group {
++        display: flex;
++        flex-wrap: wrap;
++        gap: 1rem;
++        align-items: center;
++      }
++
++      .offer-pricing .cta-group {
++        justify-content: center;
++      }
++
++      .cta-primary,
++      .cta-secondary {
++        display: inline-flex;
++        align-items: center;
++        gap: 0.6rem;
++        padding: 1rem 2.6rem;
++        border-radius: 999px;
++        font-size: 1.05rem;
++        font-weight: 700;
++        letter-spacing: 0.02em;
++        transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
++      }
++      .cta-primary {
++        background: var(--gradient);
++        color: #0b001f;
++        box-shadow: 0 24px 60px rgba(0, 240, 255, 0.38), 0 0 28px rgba(255, 77, 255, 0.35);
++      }
++
++      .cta-primary:hover {
++        transform: translateY(-3px);
++        box-shadow: 0 30px 60px rgba(255, 77, 255, 0.45);
++      }
++
++      .cta-secondary {
++        border: 2px solid rgba(0, 240, 255, 0.4);
++        color: #fff;
++        background: rgba(4, 0, 19, 0.65);
++        box-shadow: 0 0 25px rgba(0, 240, 255, 0.2);
++      }
++
++      .cta-secondary:hover {
++        transform: translateY(-3px);
++        border-color: rgba(255, 77, 255, 0.8);
++        box-shadow: 0 0 30px rgba(255, 77, 255, 0.35);
++      }
++
++      .avatar-section .cta-group {
++        justify-content: center;
++      }
++
++      .hero-media {
++        display: none;
++      }
++
++      .hero-visual {
++        background: rgba(4, 0, 19, 0.6);
++        border-radius: 26px;
++        padding: clamp(1.1rem, 2.6vw, 1.7rem);
++        border: 1px solid rgba(0, 240, 255, 0.28);
++        box-shadow: 0 32px 80px rgba(0, 0, 0, 0.55), 0 0 38px rgba(0, 240, 255, 0.22);
++        width: min(1080px, 96vw);
++        margin: 0 auto;
++      }
++
++      .hero-comparison {
++        display: grid;
++        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
++        gap: clamp(0.9rem, 2.5vw, 1.4rem);
++        justify-items: center;
++        align-items: stretch;
++      }
++      .comparison-card {
++        display: grid;
++        gap: 0.65rem;
++        justify-items: center;
++        background: linear-gradient(140deg, rgba(0, 240, 255, 0.12), rgba(255, 77, 255, 0.12));
++        border: 1px solid rgba(0, 240, 255, 0.28);
++        border-radius: 18px;
++        padding: 1.1rem 1.2rem;
++        box-shadow: inset 0 0 24px rgba(0, 240, 255, 0.18), 0 18px 45px rgba(0, 0, 0, 0.5);
++      }
++
++      .comparison-chip {
++        display: inline-flex;
++        align-items: center;
++        justify-content: center;
++        gap: 0.4rem;
++        padding: 0.55rem 1.15rem;
++        border-radius: 999px;
++        background: rgba(4, 0, 19, 0.75);
++        border: 1px solid rgba(0, 240, 255, 0.35);
++        font-weight: 800;
++        color: #fff;
++        text-transform: uppercase;
++        letter-spacing: 0.06em;
++        font-size: 0.95rem;
++        box-shadow: 0 0 22px rgba(0, 240, 255, 0.28);
++      }
++
++      .comparison-clip {
++        position: relative;
++        width: min(360px, 100%);
++        aspect-ratio: 9 / 16;
++        border-radius: 16px;
++        overflow: hidden;
++        background: radial-gradient(circle at 30% 30%, rgba(0, 240, 255, 0.22), transparent 58%),
++          radial-gradient(circle at 70% 70%, rgba(255, 77, 255, 0.2), transparent 60%),
++          rgba(4, 0, 19, 0.85);
++        border: 1px solid rgba(0, 240, 255, 0.32);
++        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55), 0 0 30px rgba(0, 240, 255, 0.2);
++      }
++
++      .comparison-clip video,
++      .comparison-clip iframe {
++        position: absolute;
++        inset: 0;
++        width: 100%;
++        height: 100%;
++        object-fit: cover;
++        border-radius: 16px;
++      }
++
++      .comparison-clip .clip-fallback {
++        position: absolute;
++        inset: 0;
++        display: grid;
++        place-items: center;
++        padding: 1.2rem;
++        color: rgba(244, 243, 255, 0.78);
++        text-align: center;
++        font-weight: 700;
++        line-height: 1.5;
++        background: linear-gradient(135deg, rgba(0, 240, 255, 0.08), rgba(255, 77, 255, 0.08));
++        opacity: 0;
++        pointer-events: none;
++      }
++
++      .section-video {
++        position: relative;
++        border-radius: 18px;
++        padding: clamp(0.75rem, 2vw, 1rem);
++        background: linear-gradient(135deg, rgba(0, 240, 255, 0.12), rgba(255, 77, 255, 0.12));
++        border: 1px solid rgba(0, 240, 255, 0.28);
++        box-shadow: 0 25px 65px rgba(0, 0, 0, 0.5), 0 0 30px rgba(0, 240, 255, 0.18);
++        overflow: hidden;
++        margin: 0 auto clamp(1.2rem, 3vw, 1.8rem);
++        width: min(1100px, 100%);
++      }
++
++      .section-video::before {
++        content: "";
++        position: absolute;
++        inset: 0;
++        background: radial-gradient(circle at 25% 25%, rgba(0, 240, 255, 0.2), transparent 55%),
++          radial-gradient(circle at 70% 75%, rgba(255, 77, 255, 0.22), transparent 60%);
++        opacity: 0.85;
++        pointer-events: none;
++      }
++
++      .section-video iframe {
++        position: relative;
++        z-index: 1;
++        width: 100%;
++        aspect-ratio: 16 / 9;
++        border: none;
++        border-radius: 12px;
++        box-shadow: 0 0 25px rgba(0, 240, 255, 0.24);
++      }
++
++      section {
++        padding: 5rem 0;
++        position: relative;
++      }
++
++      section::before {
++        content: "";
++        position: absolute;
++        top: 0;
++        left: 50%;
++        transform: translateX(-50%);
++        width: min(1200px, 92vw);
++        height: 1px;
++        background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.4), transparent);
++        opacity: 0.4;
++        pointer-events: none;
++        z-index: 0;
++      }
++
++      section::after {
++        content: "";
++        position: absolute;
++        width: 70%;
++        height: 70%;
++        top: 45%;
++        left: 25%;
++        transform: translate(-50%, -50%);
++        background: radial-gradient(circle, rgba(0, 240, 255, 0.18), transparent 60%);
++        filter: blur(70px);
++        opacity: 0.8;
++        pointer-events: none;
++        z-index: 0;
++      }
++
++      section:nth-of-type(even)::after {
++        left: auto;
++        right: 20%;
++        top: 35%;
++        transform: translate(50%, -50%);
++        background: radial-gradient(circle, rgba(255, 77, 255, 0.2), transparent 60%);
++      }
++
++      section:not(:last-of-type) > .container {
++        padding: clamp(1.6rem, 4vw, 3.4rem);
++        background: linear-gradient(135deg, rgba(4, 0, 19, 0.72), rgba(11, 0, 34, 0.78));
++        border-radius: 28px;
++        border: 1px solid rgba(0, 240, 255, 0.22);
++        box-shadow: 0 40px 120px rgba(0, 0, 0, 0.6), 0 0 45px rgba(0, 240, 255, 0.18);
++        backdrop-filter: blur(18px);
++        overflow: hidden;
++      }
++
++      section:not(:last-of-type) > .container::before {
++        content: "";
++        position: absolute;
++        inset: 12% 8% auto 8%;
++        height: 1px;
++        background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.4), transparent);
++        opacity: 0.2;
++        pointer-events: none;
++        z-index: 0;
++      }
++
++      section > .container {
++        position: relative;
++        z-index: 1;
++      }
++
++      section:not(:last-of-type) > .container > * {
++        position: relative;
++        z-index: 1;
++      }
++
++      main p + p {
++        margin-top: 1rem;
++      }
++
++      .section-title {
++        text-transform: uppercase;
++        color: var(--primary);
++        font-size: 0.9rem;
++        letter-spacing: 0.2rem;
++        font-weight: 700;
++        margin-bottom: 0.75rem;
++      }
++
++      h2 {
++        font-size: clamp(2rem, 4vw, 2.8rem);
++        margin-bottom: 1.5rem;
++        color: #fff;
++        text-shadow: 0 0 18px rgba(139, 93, 255, 0.45);
++      }
++
++      .authority {
++        display: grid;
++        gap: 1.5rem;
++        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
++      }
++
++      .authority-card {
++        background: rgba(11, 4, 37, 0.8);
++        border-radius: 18px;
++        padding: 2rem;
++        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45), 0 0 25px rgba(0, 240, 255, 0.18);
++        border: 1px solid rgba(139, 93, 255, 0.35);
++      }
++
++      .story-section .authority {
++        justify-items: center;
++      }
++
++      .benefits-section .benefits-list {
++        max-width: 900px;
++        margin: 0 auto;
++      }
++
++      .benefits-section .benefits-list li {
++        font-weight: 600;
++        color: #fdfbff;
++      }
++
++      .avatar-showcase .avatar-grid,
++      .avatar-section .avatar-grid {
++        display: grid;
++        gap: 1.6rem;
++        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
++        width: 100%;
++      }
++
++      .avatar-card {
++        display: grid;
++        gap: 1rem;
++        text-align: left;
++      }
++
++      .avatar-card h3 {
++        color: #fff;
++        font-size: 1.35rem;
++      }
++
++      .avatar-card p {
++        color: rgba(244, 243, 255, 0.9);
++        line-height: 1.65;
++      }
++
++      .avatar-media {
++        border-radius: 14px;
++        overflow: hidden;
++        border: 1px solid rgba(0, 240, 255, 0.25);
++        box-shadow: 0 18px 45px rgba(0, 0, 0, 0.5), 0 0 28px rgba(255, 77, 255, 0.18);
++      }
++
++      .avatar-media img {
++        display: block;
++        width: 100%;
++        height: auto;
++      }
++
++      .about-section .container,
++      .technology-section .container,
++      .faq-section .container,
++      .pricing-section .container,
++      .final-section .container {
++        display: grid;
++        gap: 1.6rem;
++      }
++
++      .about-section .container {
++        justify-items: center;
++        text-align: center;
++        max-width: 960px;
++      }
++
++      .instructor-card {
++        display: grid;
++        gap: 1.5rem;
++        justify-items: center;
++        max-width: 840px;
++        margin: 0 auto;
++        padding: 0 1rem;
++      }
++
++      .instructor-copy {
++        display: grid;
++        gap: 1rem;
++        color: rgba(244, 243, 255, 0.9);
++        text-align: center;
++      }
++
++      .instructor-photo {
++        width: 200px;
++        height: 200px;
++        object-fit: cover;
++        border-radius: 50%;
++        border: 2px solid rgba(0, 240, 255, 0.4);
++        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.5), 0 0 28px rgba(255, 77, 255, 0.25);
++      }
++
++      .testimonials-section .testimonials {
++        margin-top: 1rem;
++      }
++
++      .testimonial-photo {
++        width: 80px;
++        height: 80px;
++        object-fit: cover;
++        border-radius: 50%;
++        margin-bottom: 1rem;
++        border: 2px solid rgba(0, 240, 255, 0.35);
++        box-shadow: 0 0 18px rgba(0, 240, 255, 0.3);
++      }
++
++      .technology-section .offer-tools {
++        margin-top: 0.5rem;
++      }
++
++      .pricing-section .offer-pricing {
++        margin-top: 1rem;
++      }
++
++      .pricing-section .price-highlight {
++        width: min(520px, 100%);
++      }
++
++      .story-card {
++        max-width: 820px;
++        text-align: center;
++        background: linear-gradient(140deg, rgba(9, 0, 28, 0.9), rgba(26, 0, 59, 0.82));
++        border: 1px solid rgba(255, 77, 255, 0.35);
++        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55), 0 0 55px rgba(255, 77, 255, 0.2);
++        position: relative;
++        overflow: hidden;
++        padding: clamp(2rem, 4vw, 3rem);
++      }
++
++      .story-card::before {
++        content: "";
++        position: absolute;
++        inset: -40% -10% auto -10%;
++        height: 65%;
++        background: radial-gradient(circle, rgba(0, 240, 255, 0.3), transparent 70%);
++        opacity: 0.7;
++        filter: blur(70px);
++        pointer-events: none;
++      }
++
++      .story-card p {
++        color: rgba(245, 242, 255, 0.96);
++        font-size: clamp(1.15rem, 2.6vw, 1.35rem);
++        line-height: 1.85;
++      }
++
++      .story-card > * {
++        position: relative;
++        z-index: 1;
++      }
++
++      .avatar-section .container {
++        display: grid;
++        justify-items: center;
++        gap: clamp(1.8rem, 4vw, 2.8rem);
++        text-align: center;
++      }
++
++      .avatar-copy {
++        display: grid;
++        gap: 1.2rem;
++        max-width: 820px;
++        color: rgba(244, 243, 255, 0.9);
++        line-height: 1.75;
++      }
++
++      .avatar-copy p {
++        background: linear-gradient(135deg, rgba(0, 240, 255, 0.08), rgba(255, 77, 255, 0.08));
++        border-radius: 18px;
++        padding: 1.2rem 1.5rem;
++        border: 1px solid rgba(0, 240, 255, 0.16);
++        box-shadow: inset 0 0 22px rgba(0, 240, 255, 0.12);
++      }
++
++      .avatar-copy strong {
++        color: #fff;
++      }
++
++      .avatar-section .cta-group {
++        justify-content: center;
++      }
++
++      .avatar-section .story-points {
++        justify-content: center;
++      }
++
++      .story-highlight {
++        color: #fff;
++        font-weight: 700;
++        letter-spacing: 0.01em;
++        text-shadow: 0 0 20px rgba(0, 240, 255, 0.5), 0 0 35px rgba(255, 77, 255, 0.4);
++        font-size: clamp(1.2rem, 2.8vw, 1.4rem);
++      }
++
++      .story-highlight-alt {
++        color: var(--primary);
++        font-weight: 700;
++        background: linear-gradient(120deg, rgba(0, 240, 255, 0.25), rgba(255, 77, 255, 0.25));
++        padding: 0.1rem 0.45rem;
++        border-radius: 6px;
++        box-shadow: inset 0 0 18px rgba(0, 240, 255, 0.2);
++        font-size: clamp(1.18rem, 2.7vw, 1.38rem);
++      }
++
++      .story-points {
++        display: flex;
++        flex-wrap: wrap;
++        justify-content: center;
++        gap: 0.75rem;
++        margin: 1.8rem 0 0;
++      }
++
++      .story-points span {
++        display: inline-flex;
++        align-items: center;
++        gap: 0.5rem;
++        padding: 0.7rem 1.25rem;
++        border-radius: 999px;
++        background: rgba(4, 0, 19, 0.7);
++        border: 1px solid rgba(0, 240, 255, 0.45);
++        box-shadow: 0 0 18px rgba(0, 240, 255, 0.2);
++        font-size: clamp(1.05rem, 2.3vw, 1.2rem);
++        color: #fefbff;
++        font-weight: 600;
++      }
++      .story-section .highlight-cta {
++        margin-top: 2.2rem;
++        background: linear-gradient(130deg, rgba(0, 240, 255, 0.95), rgba(255, 77, 255, 0.95));
++        color: #080015;
++        border: none;
++        box-shadow: 0 22px 60px rgba(0, 240, 255, 0.35), 0 0 38px rgba(255, 77, 255, 0.4);
++        letter-spacing: 0.04em;
++      }
++
++      .story-section .highlight-cta:hover {
++        transform: translateY(-4px);
++        box-shadow: 0 30px 70px rgba(255, 77, 255, 0.5), 0 0 45px rgba(0, 240, 255, 0.4);
++      }
++      .authority-card h3 {
++        font-size: 1.3rem;
++        margin-bottom: 0.6rem;
++        color: #fff;
++      }
++
++      .authority-card p {
++        color: var(--gray);
++        font-size: 0.95rem;
++      }
++
++      .authority-card p + p {
++        margin-top: 1rem;
++      }
++
++      .authority-card .cta-secondary {
++        margin-top: 1.5rem;
++      }
++
++      .divider {
++        height: 1px;
++        background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.35), transparent);
++        margin: 4rem 0;
++      }
++
++      .program-section {
++        position: relative;
++        padding: 6rem 0;
++      }
++
++      .program-section::before {
++        content: "";
++        position: absolute;
++        inset: 10% 0 20% 0;
++        background: radial-gradient(circle at 30% 20%, rgba(0, 240, 255, 0.16), transparent 60%),
++          radial-gradient(circle at 70% 80%, rgba(255, 77, 255, 0.14), transparent 60%);
++        opacity: 0.9;
++        filter: blur(70px);
++        z-index: 0;
++        pointer-events: none;
++      }
++
++      .program-card {
++        position: relative;
++        background: linear-gradient(160deg, rgba(12, 2, 40, 0.9), rgba(33, 0, 68, 0.78));
++        border-radius: 26px;
++        padding: clamp(2.5rem, 5vw, 3.5rem);
++        box-shadow: 0 40px 120px rgba(0, 0, 0, 0.6), 0 0 50px rgba(139, 93, 255, 0.25);
++        border: 1px solid rgba(0, 240, 255, 0.25);
++        overflow: hidden;
++      }
++
++      .program-card::before {
++        content: "";
++        position: absolute;
++        inset: -40% -20% auto 50%;
++        width: 120%;
++        height: 70%;
++        background: radial-gradient(circle, rgba(0, 240, 255, 0.22), transparent 70%);
++        filter: blur(90px);
++        opacity: 0.9;
++        transform: translateX(-50%);
++        pointer-events: none;
++      }
++
++      .program-card > * {
++        position: relative;
++        z-index: 1;
++      }
++
++      .program-head {
++        display: grid;
++        gap: 1.5rem;
++        justify-items: start;
++      }
++
++      .program-intro {
++        display: grid;
++        gap: 1.2rem;
++        max-width: 860px;
++        font-size: 1.1rem;
++        line-height: 1.75;
++        color: rgba(244, 243, 255, 0.92);
++      }
++
++      .program-intro p {
++        margin: 0;
++        background: linear-gradient(135deg, rgba(0, 240, 255, 0.08), rgba(255, 77, 255, 0.08));
++        border-left: 3px solid rgba(0, 240, 255, 0.45);
++        padding: 1.2rem 1.5rem;
++        border-radius: 18px;
++        box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.35);
++      }
++
++      .program-intro strong {
++        color: #fff;
++      }
++
++      .glow-text {
++        color: var(--primary);
++        font-weight: 700;
++        text-shadow: 0 0 18px rgba(0, 240, 255, 0.6);
++      }
++
++      .program-tags {
++        display: flex;
++        flex-wrap: wrap;
++        gap: 0.75rem;
++      }
++
++      .program-tags span {
++        display: inline-flex;
++        align-items: center;
++        gap: 0.5rem;
++        padding: 0.65rem 1.1rem;
++        border-radius: 999px;
++        background: rgba(0, 240, 255, 0.12);
++        border: 1px solid rgba(255, 77, 255, 0.35);
++        color: rgba(244, 243, 255, 0.9);
++        font-size: 0.95rem;
++        letter-spacing: 0.01em;
++        box-shadow: 0 0 25px rgba(0, 240, 255, 0.18);
++      }
++
++      .program-tags i {
++        color: var(--secondary);
++      }
++
++      .program-body {
++        margin-top: 2.5rem;
++        display: grid;
++        gap: 2rem;
++      }
++
++      .program-body h3 {
++        font-size: clamp(1.4rem, 3vw, 1.9rem);
++        color: #fff;
++        text-shadow: 0 0 22px rgba(255, 77, 255, 0.4);
++      }
++
++      .program-narrative {
++        display: grid;
++        gap: 1.1rem;
++        font-size: 1.06rem;
++        line-height: 1.8;
++        color: rgba(244, 243, 255, 0.92);
++        background: linear-gradient(140deg, rgba(9, 0, 32, 0.78), rgba(32, 0, 64, 0.72));
++        border: 1px solid rgba(0, 240, 255, 0.22);
++        border-radius: 20px;
++        padding: 1.6rem 1.9rem;
++        box-shadow: inset 0 0 30px rgba(255, 77, 255, 0.16), 0 25px 60px rgba(0, 0, 0, 0.55);
++      }
++
++      .program-narrative p {
++        margin: 0;
++        background: rgba(4, 0, 19, 0.45);
++        padding: 1.2rem 1.4rem;
++        border-radius: 16px;
++        border-left: 3px solid rgba(255, 77, 255, 0.4);
++        box-shadow: inset 0 0 18px rgba(0, 240, 255, 0.14);
++      }
++
++      .program-list {
++        list-style: none;
++        margin: 0;
++        padding: 0;
++        display: grid;
++        gap: 1rem;
++      }
++
++      .program-list li {
++        display: flex;
++        align-items: flex-start;
++        gap: 1rem;
++        background: rgba(9, 0, 25, 0.82);
++        border-radius: 16px;
++        padding: 1.1rem 1.4rem;
++        border: 1px solid rgba(0, 240, 255, 0.22);
++        box-shadow: 0 20px 45px rgba(0, 0, 0, 0.45), inset 0 0 20px rgba(255, 77, 255, 0.12);
++      }
++
++      .program-list .icon {
++        font-size: 1.4rem;
++        display: inline-flex;
++        align-items: center;
++        justify-content: center;
++        width: 42px;
++        height: 42px;
++        border-radius: 50%;
++        background: rgba(0, 240, 255, 0.18);
++        box-shadow: 0 0 18px rgba(0, 240, 255, 0.35);
++      }
++
++      .program-list span + span {
++        flex: 1;
++        color: rgba(244, 243, 255, 0.88);
++        font-size: 1.05rem;
++        line-height: 1.6;
++      }
++
++      .program-demo {
++        display: grid;
++        gap: 1.4rem;
++        background: rgba(9, 0, 32, 0.78);
++        border-radius: 20px;
++        padding: 1.8rem;
++        border: 1px solid rgba(255, 77, 255, 0.28);
++        box-shadow: 0 30px 70px rgba(0, 0, 0, 0.55), inset 0 0 25px rgba(0, 240, 255, 0.14);
++      }
++
++      .demo-video {
++        position: relative;
++        border-radius: 18px;
++        border: 1px solid rgba(0, 240, 255, 0.25);
++        background: linear-gradient(135deg, rgba(0, 240, 255, 0.12), rgba(255, 77, 255, 0.12));
++        overflow: hidden;
++      }
++
++      .demo-video::before {
++        content: "";
++        position: absolute;
++        inset: 0;
++        background: radial-gradient(circle at 30% 30%, rgba(0, 240, 255, 0.18), transparent 55%),
++          radial-gradient(circle at 70% 70%, rgba(255, 77, 255, 0.2), transparent 60%);
++        opacity: 0.8;
++        pointer-events: none;
++        z-index: 0;
++      }
++
++      .demo-video iframe {
++        position: relative;
++        z-index: 1;
++        width: 100%;
++        aspect-ratio: 16 / 9;
++        border: none;
++        display: block;
++      }
++
++      .demo-cta {
++        justify-self: center;
++      }
++
++      .demo-note {
++        text-align: center;
++        font-size: 0.98rem;
++        color: rgba(244, 243, 255, 0.76);
++      }
++      .offer-section .container {
++        display: grid;
++        gap: clamp(1.8rem, 4vw, 2.6rem);
++        padding: clamp(1.8rem, 4vw, 3.2rem);
++        background: linear-gradient(135deg, rgba(4, 0, 19, 0.74), rgba(11, 0, 34, 0.78));
++        border-radius: 28px;
++        border: 1px solid rgba(0, 240, 255, 0.22);
++        box-shadow: 0 40px 120px rgba(0, 0, 0, 0.6), 0 0 45px rgba(0, 240, 255, 0.18);
++        backdrop-filter: blur(18px);
++      }
++
++      .offer-copy {
++        display: grid;
++        gap: 1rem;
++        line-height: 1.7;
++        color: rgba(244, 243, 255, 0.88);
++      }
++
++      .offer-copy p strong {
++        color: var(--primary);
++      }
++
++      .offer-benefits {
++        background: rgba(4, 0, 19, 0.75);
++        border-radius: 20px;
++        border: 1px solid rgba(0, 240, 255, 0.25);
++        box-shadow: 0 28px 75px rgba(0, 0, 0, 0.55), inset 0 0 28px rgba(255, 77, 255, 0.18);
++        padding: clamp(1.8rem, 3.2vw, 2.4rem);
++        display: grid;
++        gap: 1.2rem;
++      }
++
++      .offer-benefits h3 {
++        font-size: 1.3rem;
++        text-transform: uppercase;
++        letter-spacing: 0.08em;
++        color: var(--primary);
++        text-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
++      }
++
++      .offer-benefit-list {
++        list-style: none;
++        display: grid;
++        gap: 0.85rem;
++        margin: 0;
++        padding: 0;
++      }
++
++      .offer-benefit-list li {
++        display: flex;
++        gap: 0.65rem;
++        align-items: flex-start;
++        padding: 0.9rem 1.2rem;
++        border-radius: 14px;
++        background: linear-gradient(135deg, rgba(0, 240, 255, 0.14), rgba(255, 77, 255, 0.12));
++        border: 1px solid rgba(139, 93, 255, 0.28);
++        box-shadow: inset 0 0 22px rgba(0, 240, 255, 0.14);
++        color: rgba(244, 243, 255, 0.9);
++      }
++
++      .offer-benefit-list li span {
++        font-size: 1.05rem;
++        line-height: 1.6;
++      }
++
++      .offer-tools {
++        background: rgba(4, 0, 19, 0.78);
++        border-radius: 20px;
++        border: 1px solid rgba(255, 77, 255, 0.28);
++        box-shadow: 0 28px 75px rgba(0, 0, 0, 0.55), inset 0 0 26px rgba(0, 240, 255, 0.16);
++        padding: clamp(1.8rem, 3.2vw, 2.3rem);
++        display: grid;
++        gap: 1rem;
++        color: rgba(244, 243, 255, 0.86);
++      }
++
++      .founder-schedule {
++        margin: 2.4rem auto 0;
++        padding: 2.2rem 2.6rem;
++        display: grid;
++        gap: 0.9rem;
++        background: rgba(4, 0, 19, 0.8);
++        border-radius: 20px;
++        border: 1px solid rgba(255, 77, 255, 0.32);
++        box-shadow: 0 28px 75px rgba(0, 0, 0, 0.55), inset 0 0 26px rgba(0, 240, 255, 0.16);
++        color: rgba(244, 243, 255, 0.88);
++      }
++
++      .founder-schedule h3 {
++        font-size: 1.25rem;
++        text-transform: uppercase;
++        letter-spacing: 0.1em;
++        color: var(--primary);
++        text-shadow: 0 0 18px rgba(0, 240, 255, 0.45);
++      }
++
++      .founder-schedule p {
++        line-height: 1.6;
++      }
++
++      .founder-schedule .schedule-note {
++        margin-top: 0.4rem;
++        font-weight: 600;
++        color: rgba(255, 173, 255, 0.95);
++        text-shadow: 0 0 18px rgba(255, 77, 255, 0.4);
++      }
++
++      .bonuses {
++        background: rgba(11, 4, 37, 0.9);
++        border-radius: 20px;
++        padding: 3rem;
++        display: grid;
++        gap: 1.8rem;
++        border: 1px solid rgba(139, 93, 255, 0.35);
++        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55), 0 0 35px rgba(139, 93, 255, 0.2);
++      }
++
++      .bonuses-title {
++        font-size: 1.35rem;
++        font-weight: 700;
++        text-transform: uppercase;
++        letter-spacing: 0.08em;
++        color: var(--primary);
++        text-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
++      }
++
++      .bonus-grid {
++        display: grid;
++        gap: 1.5rem;
++        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
++      }
++      .bonus-card {
++        display: grid;
++        gap: 1rem;
++        grid-template-columns: minmax(0, 1fr);
++        background: rgba(4, 0, 19, 0.75);
++        border-radius: 16px;
++        padding: 1.6rem;
++        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 25px rgba(0, 240, 255, 0.25);
++        border: 1px solid rgba(0, 240, 255, 0.25);
++      }
++
++      .offer-pricing {
++        margin-top: 2.5rem;
++        display: grid;
++        gap: 1.2rem;
++        justify-items: center;
++        text-align: center;
++      }
++
++      .guarantee-block {
++        margin-top: 2rem;
++        padding: 2.1rem 2.4rem;
++        border-radius: 18px;
++        background: rgba(4, 0, 19, 0.8);
++        border: 1px solid rgba(255, 77, 255, 0.28);
++        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5), inset 0 0 32px rgba(0, 240, 255, 0.18);
++        display: grid;
++        gap: 0.9rem;
++      }
++
++      .guarantee-block h3 {
++        font-size: 1.2rem;
++        text-transform: uppercase;
++        letter-spacing: 0.08em;
++        color: var(--secondary);
++        text-shadow: 0 0 20px rgba(255, 77, 255, 0.45);
++      }
++
++      .guarantee-block p {
++        color: rgba(244, 243, 255, 0.82);
++        line-height: 1.6;
++      }
++
++      .price-highlight {
++        position: relative;
++        display: grid;
++        gap: 0.75rem;
++        justify-items: center;
++        padding: 1.9rem 2.4rem;
++        border-radius: 20px;
++        background: rgba(4, 0, 19, 0.82);
++        border: 1px solid rgba(255, 77, 255, 0.35);
++        box-shadow: 0 35px 90px rgba(0, 0, 0, 0.55), 0 0 40px rgba(0, 240, 255, 0.28);
++        overflow: hidden;
++        z-index: 1;
++      }
++
++      .price-highlight::before {
++        content: "";
++        position: absolute;
++        inset: 0;
++        background: radial-gradient(circle at 20% 0%, rgba(0, 240, 255, 0.28), transparent 55%),
++          radial-gradient(circle at 80% 100%, rgba(255, 77, 255, 0.25), transparent 60%);
++        opacity: 0.9;
++        pointer-events: none;
++      }
++
++      .price-highlight > * {
++        position: relative;
++        z-index: 1;
++      }
++
++      .price-badge {
++        position: relative;
++        font-size: 0.95rem;
++        font-weight: 700;
++        letter-spacing: 0.08em;
++        text-transform: uppercase;
++        padding: 0.45rem 1.4rem;
++        border-radius: 999px;
++        background: linear-gradient(135deg, rgba(0, 240, 255, 0.8), rgba(255, 77, 255, 0.85));
++        color: #040013;
++        box-shadow: 0 0 25px rgba(0, 240, 255, 0.45);
++      }
++
++      .price-offer {
++        font-size: 1.05rem;
++        letter-spacing: 0.08em;
++        text-transform: uppercase;
++        color: rgba(244, 243, 255, 0.82);
++      }
++
++      .price-savings {
++        font-size: 1.15rem;
++        font-weight: 700;
++        letter-spacing: 0.12em;
++        text-transform: uppercase;
++        color: var(--secondary);
++        text-shadow: 0 0 18px rgba(255, 77, 255, 0.6);
++      }
++
++      .price-new {
++        font-size: clamp(2.8rem, 5vw, 3.6rem);
++        font-weight: 800;
++        color: #ffffff;
++        text-shadow: 0 0 35px rgba(255, 77, 255, 0.55), 0 0 25px rgba(0, 240, 255, 0.55);
++      }
++
++      .price-split {
++        font-size: 1.2rem;
++        font-weight: 600;
++        color: rgba(244, 243, 255, 0.88);
++      }
++
++      .price-note {
++        font-size: 0.95rem;
++        color: rgba(244, 243, 255, 0.78);
++        max-width: 420px;
++        display: block;
++        line-height: 1.5;
++        margin: 0 auto;
++      }
++
++      .price-note .price-breakdown {
++        display: block;
++        margin-bottom: 0.4rem;
++        padding: 0.75rem 1rem;
++        border-radius: 14px;
++        background: linear-gradient(135deg, rgba(0, 240, 255, 0.18), rgba(255, 77, 255, 0.16));
++        border: 1px solid rgba(0, 240, 255, 0.35);
++        color: #ffffff;
++        font-weight: 700;
++        letter-spacing: 0.02em;
++        text-align: center;
++        box-shadow: 0 0 24px rgba(0, 240, 255, 0.25);
++      }
++
++      .bonus-card h4 {
++        color: var(--secondary);
++        text-shadow: 0 0 15px rgba(255, 77, 255, 0.4);
++      }
++      .offer-progress {
++        background: rgba(4, 0, 19, 0.78);
++        border-radius: 16px;
++        padding: 1.6rem 1.8rem;
++        border: 1px solid rgba(0, 240, 255, 0.32);
++        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5), 0 0 35px rgba(255, 77, 255, 0.24);
++        display: grid;
++        gap: 0.9rem;
++        position: relative;
++        overflow: hidden;
++        width: min(520px, 100%);
++      }
++
++      .offer-progress::before {
++        content: "";
++        position: absolute;
++        inset: 0;
++        background: linear-gradient(120deg, rgba(0, 240, 255, 0.12), rgba(255, 77, 255, 0.12));
++        filter: blur(0.5px);
++        opacity: 0.8;
++        pointer-events: none;
++      }
++
++      .progress-info {
++        display: flex;
++        justify-content: space-between;
++        align-items: center;
++        gap: 0.5rem;
++        position: relative;
++        z-index: 1;
++        font-size: 0.95rem;
++        letter-spacing: 0.04em;
++        text-transform: uppercase;
++        color: rgba(244, 243, 255, 0.78);
++      }
++
++      .progress-date {
++        font-weight: 700;
++        color: var(--primary);
++        text-shadow: 0 0 15px rgba(0, 240, 255, 0.6);
++      }
++
++      .progress-bar {
++        position: relative;
++        z-index: 1;
++        height: 12px;
++        border-radius: 999px;
++        background: rgba(255, 255, 255, 0.08);
++        border: 1px solid rgba(0, 240, 255, 0.35);
++        overflow: hidden;
++        box-shadow: inset 0 0 25px rgba(139, 93, 255, 0.25);
++      }
++
++      .progress-fill {
++        display: block;
++        height: 100%;
++        width: 82%;
++        background: linear-gradient(90deg, rgba(0, 240, 255, 0.95), rgba(139, 93, 255, 0.95), rgba(255, 77, 255, 0.95));
++        background-size: 220% 100%;
++        box-shadow: 0 0 20px rgba(0, 240, 255, 0.65);
++        border-radius: inherit;
++        position: relative;
++        animation: pulseFill 2.8s ease-in-out infinite, progressFlow 5.5s linear infinite;
++      }
++
++      .progress-fill::after {
++        content: "";
++        position: absolute;
++        inset: 0;
++        background: linear-gradient(
++          120deg,
++          transparent 0%,
++          rgba(255, 255, 255, 0.35) 15%,
++          rgba(255, 255, 255, 0.55) 30%,
++          rgba(255, 255, 255, 0.35) 45%,
++          transparent 60%
++        );
++        mix-blend-mode: screen;
++        opacity: 0.9;
++        animation: sweepGlow 2.8s ease-in-out infinite;
++      }
++
++      @keyframes pulseFill {
++        0%,
++        100% {
++          filter: drop-shadow(0 0 12px rgba(0, 240, 255, 0.65));
++        }
++        50% {
++          filter: drop-shadow(0 0 18px rgba(255, 77, 255, 0.75));
++        }
++      }
++
++      @keyframes progressFlow {
++        0% {
++          background-position: 0% 50%;
++        }
++        100% {
++          background-position: 200% 50%;
++        }
++      }
++
++      @keyframes sweepGlow {
++        0% {
++          transform: translateX(-100%);
++          opacity: 0;
++        }
++        35% {
++          opacity: 0.9;
++        }
++        70% {
++          opacity: 0.4;
++        }
++        100% {
++          transform: translateX(120%);
++          opacity: 0;
++        }
++      }
++
++      .testimonials {
++        display: grid;
++        gap: 1.5rem;
++        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
++      }
++
++      .testimonial {
++        background: rgba(9, 0, 25, 0.82);
++        border-radius: 18px;
++        padding: 2rem;
++        box-shadow: 0 25px 70px rgba(0, 0, 0, 0.55), 0 0 20px rgba(139, 93, 255, 0.22);
++        position: relative;
++        overflow: hidden;
++        border: 1px solid rgba(139, 93, 255, 0.35);
++      }
++
++      .testimonial::before {
++        content: "\f10d";
++        font-family: "Font Awesome 6 Free";
++        font-weight: 900;
++        color: rgba(0, 240, 255, 0.25);
++        font-size: 3.5rem;
++        position: absolute;
++        top: 1rem;
++        right: 1.5rem;
++      }
++
++      .testimonial p {
++        color: var(--gray);
++        margin-bottom: 1.5rem;
++      }
++
++      .testimonial strong {
++        font-size: 1.05rem;
++        color: #fff;
++      }
++
++      @media (prefers-reduced-motion: reduce) {
++        *,
++        *::before,
++        *::after {
++          animation-duration: 0.01ms !important;
++          animation-iteration-count: 1 !important;
++          transition-duration: 0.01ms !important;
++          scroll-behavior: auto !important;
++        }
++      }
++
++      @media (max-width: 768px) {
++        .prompt-layout {
++          grid-template-columns: 1fr;
++        }
++
++        .prompt-right {
++          order: -1;
++        }
++
++        .prompt-card,
++        .output-card {
++          padding: 1rem 1.1rem;
++        }
++
++        .prompt-hairstyle-grid,
++        .prompt-style-grid,
++        .prompt-button-grid {
++          grid-template-columns: 1fr;
++        }
++
++        .gallery-grid {
++          grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
++        }
++
++        .hero-visual {
++          width: 100%;
++          padding: 0.55rem 0.25rem 0.85rem;
++          overflow: visible;
++        }
++
++        .hero-comparison {
++          display: grid;
++          grid-template-columns: repeat(2, minmax(46vw, 1fr));
++          gap: clamp(0.6rem, 2vw, 0.9rem);
++          justify-items: center;
++          align-items: stretch;
++        }
++
++        .comparison-card {
++          width: 100%;
++          max-width: none;
++        }
++
++        .comparison-clip {
++          width: 100%;
++        }
++
++        body {
++          background: #050016;
++          line-height: 1.6;
++        }
++
++        body::before,
++        body::after,
++        header::before,
++        header::after,
++        section::before,
++        section::after,
++        section:not(:last-of-type) > .container::before,
++        .program-section::before,
++        .program-card::before,
++        .story-card::before,
++        .final-section .container::before,
++        .section-video::before {
++          content: none;
++        }
++
++        header {
++          padding: 1.75rem 0 3.5rem;
++          box-shadow: 0 18px 48px rgba(0, 0, 0, 0.55);
++        }
++
++        section {
++          padding: 3.5rem 0;
++        }
++
++        .container {
++          width: min(640px, 92vw);
++        }
++
++        .hero {
++          gap: 1.8rem;
++        }
++
++        .hero-media,
++        .hero-support,
++        .story-card,
++        .authority-card,
++        .program-card,
++        .program-intro p,
++        .program-demo,
++        .founder-schedule,
++        .bonuses,
++        .bonus-card,
++        .offer-testimonial,
++        .offer-progress,
++        .guarantee-block,
++        .final-section .container,
++        details,
++        .testimonial,
++        .section-video {
++          background: rgba(6, 0, 22, 0.94);
++          box-shadow: 0 14px 32px rgba(0, 0, 0, 0.48);
++          backdrop-filter: none;
++        }
++
++        .avatar-section .container {
++          gap: 1.6rem;
++        }
++
++        .avatar-copy {
++          gap: 1rem;
++        }
++
++        .avatar-copy p {
++          padding: 1rem 1.2rem;
++        }
++
++        .hero-media {
++          padding: 1rem;
++          border-radius: 18px;
++        }
++
++        .hero-media iframe {
++          min-height: 220px;
++        }
++
++        .hero-support,
++        .program-intro p,
++        .program-demo,
++        .founder-schedule,
++        .bonuses,
++        .bonus-card,
++        .offer-progress,
++        .guarantee-block,
++        .final-section .container,
++        details,
++        .testimonial {
++          padding: 1.6rem;
++        }
++
++        section:not(:last-of-type) > .container {
++          background: rgba(8, 0, 24, 0.95);
++          box-shadow: 0 18px 42px rgba(0, 0, 0, 0.55);
++          border: 1px solid rgba(0, 240, 255, 0.18);
++          backdrop-filter: none;
++        }
++
++        .bonuses {
++          gap: 1.4rem;
++        }
++
++        .bonus-card {
++          padding: 1.4rem;
++        }
++
++        .offer-progress {
++          width: 100%;
++        }
++
++        .offer-progress::before,
++        .program-section::before {
++          display: none;
++        }
++
++        .progress-bar {
++          box-shadow: none;
++        }
++
++        .progress-fill {
++          animation: none;
++          background-size: 100% 100%;
++        }
++
++        .progress-fill::after {
++          animation: none;
++          opacity: 0.25;
++        }
++
++        .final-section .container {
++          padding: 2.4rem 1.6rem;
++        }
++      }
++
++      @media (max-width: 480px) {
++        .hero-media iframe {
++          min-height: 200px;
++        }
++
++        .hero-badges {
++          gap: 0.75rem;
++        }
++
++        .cta-group {
++          justify-content: center;
++        }
++
++        .cta-primary,
++        .cta-secondary {
++          width: 100%;
++          justify-content: center;
++        }
++      }
++
++      .guarantee {
++        background: rgba(9, 0, 25, 0.85);
++        border-radius: 22px;
++        padding: 3rem;
++        text-align: center;
++        box-shadow: 0 35px 90px rgba(0, 0, 0, 0.55), 0 0 30px rgba(0, 240, 255, 0.25);
++        border: 1px solid rgba(0, 240, 255, 0.25);
++      }
++
++      .guarantee img {
++        width: 120px;
++        margin-bottom: 1.5rem;
++        filter: drop-shadow(0 0 15px rgba(0, 240, 255, 0.4));
++      }
++
++      .faq {
++        display: grid;
++        gap: 1rem;
++      }
++
++      details {
++        background: rgba(4, 0, 19, 0.75);
++        border-radius: 14px;
++        padding: 1.2rem 1.4rem;
++        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.45), 0 0 20px rgba(0, 240, 255, 0.2);
++        border: 1px solid rgba(139, 93, 255, 0.35);
++      }
++
++      summary {
++        font-weight: 600;
++        cursor: pointer;
++        display: flex;
++        align-items: center;
++        justify-content: space-between;
++        gap: 1rem;
++        color: #fff;
++      }
++
++      summary::after {
++        content: "\f107";
++        font-family: "Font Awesome 6 Free";
++        font-weight: 900;
++      }
++
++      details[open] summary::after {
++        transform: rotate(180deg);
++      }
++
++      footer {
++        background: linear-gradient(160deg, rgba(4, 0, 19, 0.95), rgba(12, 0, 32, 0.95));
++        color: #a89ed9;
++        padding: 3rem 0;
++        text-align: center;
++        font-size: 0.9rem;
++        box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.6);
++      }
++
++      footer a {
++        color: #fff;
++        font-weight: 600;
++      }
++
++      .footer-cta {
++        display: inline-flex;
++        align-items: center;
++        gap: 0.55rem;
++        margin-top: 1.5rem;
++        padding: 0.85rem 2rem;
++        border-radius: 999px;
++        font-weight: 700;
++        letter-spacing: 0.02em;
++        background: var(--gradient);
++        color: #050015;
++        box-shadow: 0 22px 55px rgba(0, 240, 255, 0.32);
++        transition: transform 0.3s ease, box-shadow 0.3s ease;
++      }
++
++      .footer-cta:hover {
++        transform: translateY(-3px);
++        box-shadow: 0 30px 65px rgba(255, 77, 255, 0.4);
++      }
++
++      .final-section .container {
++        background: linear-gradient(135deg, rgba(9, 0, 25, 0.92), rgba(4, 0, 19, 0.92));
++        color: #fff;
++        border-radius: 24px;
++        padding: 3rem;
++        text-align: center;
++        display: grid;
++        gap: 1.5rem;
++        justify-items: center;
++        border: 1px solid rgba(0, 240, 255, 0.25);
++        box-shadow: 0 30px 90px rgba(0, 0, 0, 0.55), 0 0 40px rgba(255, 77, 255, 0.3);
++        position: relative;
++        overflow: hidden;
++      }
++
++      .final-section .container::before {
++        content: "";
++        position: absolute;
++        inset: -40% -60%;
++        background: radial-gradient(circle, rgba(0, 240, 255, 0.18), transparent 60%);
++        animation: pulse 6s infinite linear;
++        z-index: 0;
++      }
++
++      .final-section .container > * {
++        position: relative;
++        z-index: 1;
++      }
++
++      .final-section .final-note {
++        margin: 0;
++        color: rgba(244, 243, 255, 0.82);
++        font-size: 1.05rem;
++      }
++
++      .final-section h2 {
++        color: #fff;
++        margin-bottom: 0;
++      }
++
++      .price {
++        font-size: 2.8rem;
++        font-weight: 800;
++        color: var(--primary);
++        text-shadow: 0 0 20px rgba(0, 240, 255, 0.45);
++      }
++
++      .price small {
++        font-size: 1rem;
++        font-weight: 500;
++        display: block;
++        color: #fff;
++        opacity: 0.75;
++      }
++
++      .highlight {
++        background: rgba(0, 240, 255, 0.18);
++        padding: 0.8rem 1.4rem;
++        border-radius: 999px;
++        font-weight: 600;
++        border: 1px solid rgba(255, 77, 255, 0.4);
++        box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
++      }
++
++      @media (max-width: 768px) {
++        header {
++          padding-bottom: 4rem;
++        }
++
++        .cta-group {
++          flex-direction: column;
++          align-items: stretch;
++        }
++
++        .cta-primary,
++        .cta-secondary {
++          justify-content: center;
++          width: 100%;
++        }
++
++        .program-card {
++          padding: 2.25rem;
++        }
++
++        .program-head {
++          justify-items: stretch;
++        }
++
++        .program-tags {
++          justify-content: center;
++        }
++
++        .program-intro p {
++          text-align: left;
++        }
++      }
++    </style>
++  </head>
++  <body>
++    <!-- Google Tag Manager (noscript) -->
++    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K5NK3XV6"
++height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
++    <!-- End Google Tag Manager (noscript) -->
++    <header>
++      <div class="container hero prompt-section">
++        <div class="prompt-header">
++          <span class="section-title">gerador de prompts · frente do funil</span>
++          <div class="prompt-title-row">
++            <span class="sparkles-icon" aria-hidden="true">✨</span>
++            <h1 class="hero-title">Gerador de Prompts</h1>
++          </div>
++          <p class="hero-subhead">Crie prompts profissionais para imagens hiper-realistas, mantendo seu rosto e estilo intactos.</p>
++          <p class="hero-microcopy">Preencha, gere o prompt e copie em um clique.</p>
++        </div>
++        <div class="prompt-layout">
++          <div class="prompt-left">
++            <div class="prompt-card">
++              <header class="prompt-card-header">
++                <h2 class="prompt-card-title">Descrição da Imagem</h2>
++                <p class="prompt-card-description">Descreva o que você deseja na imagem</p>
++              </header>
++              <textarea
++                id="description"
++                class="prompt-textarea"
++                placeholder="Ex: mulher caminhando na praia ao pôr do sol, cabelo ao vento e expressão tranquila"
++              ></textarea>
++            </div>
++
++            <div class="prompt-card">
++              <header class="prompt-card-header">
++                <h2 class="prompt-card-title">Formato</h2>
++                <p class="prompt-card-description">Escolha o tamanho da imagem</p>
++              </header>
++              <div class="prompt-button-grid">
++                <button class="option-button selected" data-format="vertical">
++                  <span class="option-label">Vertical (1080x1920)</span>
++                  <span class="option-desc">Para retratos</span>
++                </button>
++                <button class="option-button" data-format="horizontal">
++                  <span class="option-label">Horizontal (16:9)</span>
++                  <span class="option-desc">Para cenas amplas</span>
++                </button>
++              </div>
++            </div>
++
++            <div class="prompt-card">
++              <header class="prompt-card-header">
++                <h2 class="prompt-card-title">Estilo de Cabelo</h2>
++                <p class="prompt-card-description">Escolha como você deseja que o cabelo apareça</p>
++              </header>
++              <div class="prompt-hairstyle-grid">
++                <button class="option-button selected hairstyle-option" data-hairstyle="Sem alteração">Sem alteração</button>
++                <button class="option-button hairstyle-option" data-hairstyle="🌊 Ondas Soltas">🌊 Ondas Soltas</button>
++                <button class="option-button hairstyle-option" data-hairstyle="💇 Liso Brilhante">💇 Liso Brilhante</button>
++                <button class="option-button hairstyle-option" data-hairstyle="🌀 Cachos Definidos">🌀 Cachos Definidos</button>
++                <button class="option-button hairstyle-option" data-hairstyle="🎀 Rabo de Cavalo">🎀 Rabo de Cavalo</button>
++                <button class="option-button hairstyle-option" data-hairstyle="✨ Coque Alto">✨ Coque Alto</button>
++                <button class="option-button hairstyle-option" data-hairstyle="🌙 Meia Praia">🌙 Meia Praia</button>
++                <button class="option-button hairstyle-option" data-hairstyle="💃 Cabelo Curto">💃 Cabelo Curto</button>
++                <button class="option-button hairstyle-option" data-hairstyle="🌸 Cabelo Comprido">🌸 Cabelo Comprido</button>
++              </div>
++            </div>
++
++            <div class="prompt-card">
++              <header class="prompt-card-header">
++                <h2 class="prompt-card-title">Estilos Visuais</h2>
++                <p class="prompt-card-description">Selecione um ou mais estilos para sua imagem</p>
++              </header>
++              <div class="prompt-style-grid">
++                <button class="option-button style-option" data-style="📸 Polaroid Vintage">📸 Polaroid Vintage</button>
++                <button class="option-button style-option" data-style="🎞️ Preto e Branco Artístico">🎞️ P&B Artístico</button>
++                <button class="option-button style-option" data-style="🌅 Golden Hour">🌅 Golden Hour</button>
++                <button class="option-button style-option" data-style="🏙️ Urbana Neon">🏙️ Urbana Neon</button>
++                <button class="option-button style-option" data-style="👔 Retrato Corporativo">👔 Corporativo</button>
++                <button class="option-button style-option" data-style="💎 Editorial de Luxo">💎 Editorial de Luxo</button>
++                <button class="option-button style-option" data-style="🌿 Retrato Externo Natural">🌿 Natural</button>
++                <button class="option-button style-option" data-style="✨ Bokeh Suave">✨ Bokeh Suave</button>
++                <button class="option-button style-option" data-style="❄️ Luz Fria / Urbana">❄️ Luz Fria</button>
++              </div>
++            </div>
++
++            <button class="generate-button" id="generateBtn">
++              <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>
++              Gerar Prompt
++            </button>
++          </div>
++
++          <aside class="prompt-right">
++            <div class="output-card">
++              <div class="output-header">
++                <div>
++                  <p class="prompt-card-title">Seu Prompt</p>
++                  <p class="prompt-card-description">Copie e use direto no gerador de IA</p>
++                </div>
++                <span id="badge" class="badge" style="display: none;">Pronto para copiar</span>
++              </div>
++              <a class="gemini-cta" href="https://gemini.google.com/app" target="_blank" rel="noopener">
++                <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>
++                Abrir o Gemini e colar o prompt
++              </a>
++              <p class="gemini-note">Clique aqui e cole o prompt no Gemini para gerar sua imagem.</p>
++              <div id="promptContainer" class="prompt-container">
++                <div class="empty-state">
++                  <i class="fa-regular fa-sparkles empty-icon" aria-hidden="true"></i>
++                  <p>Preencha os campos e clique em Gerar Prompt</p>
++                </div>
++              </div>
++            </div>
++          </aside>
++        </div>
+       </div>
+-      <div class="slider-handle"></div>
+-    </div>
+-    <div class="card-content">
+-      <h3><i class="fa-solid fa-wand-magic-sparkles"></i> ${style.name}</h3>
+-      <div class="prompt-box" id="prompt-${style.name.replace(/\s/g,'')}">${style.prompt}</div>
+-      <button class="copy-btn" onclick="copyPrompt('${style.name.replace(/\s/g,'')}')"><i class="fa-solid fa-copy"></i> Copiar Prompt</button>
+-    </div>
+-  `;
+-  gallery.appendChild(card);
+-});
+-
+-function copyPrompt(id){
+-  const promptText=document.getElementById(`prompt-${id}`).innerText;
+-  navigator.clipboard.writeText(promptText).then(()=>alert("✅ Prompt copiado!"));
+-}
+-
+-function moveSlider(e,container){
+-  const rect=container.getBoundingClientRect();
+-  let x=e.clientX-rect.left;
+-  if(x<0) x=0;
+-  if(x>rect.width) x=rect.width;
+-  const afterWrapper=container.querySelector('.after-wrapper');
+-  const handle=container.querySelector('.slider-handle');
+-  afterWrapper.style.width=x+"px";
+-  handle.style.left=x+"px";
+-}
+-</script>
+-
+-</body>
++    </header>
++
++    <section class="gallery-section">
++      <div class="container">
++        <p class="section-title">galeria rápida</p>
++        <h2>Exemplos gerados com IA</h2>
++        <div class="gallery-grid">
++          <img src="1.jpeg" alt="Exemplo de criação 1" loading="lazy" />
++          <img src="2.jpeg" alt="Exemplo de criação 2" loading="lazy" />
++          <img src="3.jpeg" alt="Exemplo de criação 3" loading="lazy" />
++          <img src="4.jpeg" alt="Exemplo de criação 4" loading="lazy" />
++          <img src="5.jpeg" alt="Exemplo de criação 5" loading="lazy" />
++          <img src="6.jpeg" alt="Exemplo de criação 6" loading="lazy" />
++        </div>
++      </div>
++    </section>
++
++    <main>
++      <section class="avatar-section" id="avatars">
++        <div class="container">
++          <div class="avatar-grid">
++            <article class="authority-card avatar-card">
++              <h3>Corretor de Imóveis – Charme e Persuasão</h3>
++              <div class="section-video">
++                <iframe
++                  id="avatarCorretorVideo"
++                  data-yt-managed="avatar"
++                  src="https://www.youtube.com/embed/XUQtjPC2luY?enablejsapi=1&rel=0&controls=1&playsinline=1"
++                  title="Vídeo 2 – Avatar Corretor"
++                  loading="lazy"
++                  allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
++                  allowfullscreen
++                ></iframe>
++              </div>
++              <p>
++                Perfeito para corretores que desejam apresentar imóveis de forma profissional e persuasiva
++                sem gravar pessoalmente. A voz e o rosto digitais mantêm a elegância e criam conexão
++                instantânea com seu público.
++              </p>
++              <div class="cta-group">
++                <a class="cta-primary" href="https://pay.hotmart.com/H102137847D?bid=1763505435528" target="_blank">
++                  <i class="fa-solid fa-handshake"></i> Ativar Corretor Digital
++                </a>
++              </div>
++            </article>
++
++            <article class="authority-card avatar-card">
++              <h3>Gamer RGB – Personalidade e Entretenimento</h3>
++              <div class="section-video">
++                <iframe
++                  id="avatarGamerVideo"
++                  data-yt-managed="avatar"
++                  src="https://www.youtube.com/embed/rxGCVk6BPds?enablejsapi=1&rel=0&controls=1&playsinline=1"
++                  title="Vídeo 3 – Avatar Gamer"
++                  loading="lazy"
++                  allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
++                  allowfullscreen
++                ></iframe>
++              </div>
++              <p>
++                Criado para streamers e criadores de conteúdo gamer que querem uma identidade única e
++                carismática. Faça lives e vídeos com seu avatar digital, mantendo consistência sem se expor.
++              </p>
++              <div class="cta-group">
++                <a class="cta-primary" href="https://pay.hotmart.com/H102137847D?bid=1763505435528" target="_blank">
++                  <i class="fa-solid fa-headset"></i> Quero meu Avatar Gamer
++                </a>
++              </div>
++            </article>
++
++            <article class="authority-card avatar-card">
++              <h3>Influencer – Presença e Impacto</h3>
++              <div class="section-video">
++                <iframe
++                  id="avatarInfluencerVideo"
++                  data-yt-managed="avatar"
++                  src="https://www.youtube.com/embed/LzwmKIyPV4U?enablejsapi=1&rel=0&controls=1&playsinline=1"
++                  title="Vídeo 5 – Avatar Influencer"
++                  loading="lazy"
++                  allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
++                  allowfullscreen
++                ></iframe>
++              </div>
++              <p>
++                Se você é criador de conteúdo ou deseja crescer nas redes, tenha um avatar digital com voz e
++                presença marcantes. Crie campanhas e publis de forma escalável, mantendo consistência e alcance.
++              </p>
++              <div class="cta-group">
++                <a class="cta-primary" href="https://pay.hotmart.com/H102137847D?bid=1763505435528" target="_blank">
++                  <i class="fa-solid fa-star"></i> Meu Clone Influencer
++                </a>
++              </div>
++            </article>
++          </div>
++        </div>
++      </section>
++
++      <section class="about-section">
++        <div class="container">
++          <p class="section-title">quem é o instrutor</p>
++          <h2>Versão Profissional e Humanizada</h2>
++          <div class="story-card instructor-card">
++            <img
++              src="mauricio-grigol.png"
++              alt="Maurício Grigol"
++              class="instructor-photo"
++              loading="lazy"
++            />
++            <div class="instructor-copy">
++              <p>
++                Me chamo <strong>Maurício Grigol</strong>, criador da Teckbird. Trabalho com IA aplicada ao mundo real —
++                desde clones digitais até automações que simplificam conteúdo e economizam tempo.
++              </p>
++           
++            </div>
++          </div>
++        </div>
++      </section>
++
++      <section class="testimonials-section">
++        <div class="container">
++          <p class="section-title">depoimentos de alunos</p>
++          <h2>Quem já está criando com IA</h2>
++          <div class="testimonials">
++            <div class="testimonial">
++              <img
++                src="ana-paula-zanetti.jpeg"
++                alt="Foto de Ana Paula Zanetti"
++                class="testimonial-photo"
++                loading="lazy"
++              />
++              <p>“Descobri que criar clones com IA abre um mundo de possibilidades para produzir conteúdo sem limites.”</p>
++              <strong>— Ana Paula Zanetti</strong>
++            </div>
++            <div class="testimonial">
++              <img
++                src="heitor-hermes.PNG"
++                alt="Foto de Heitor Hermes"
++                class="testimonial-photo"
++                loading="lazy"
++              />
++              <p>
++                “Percebi que o curso oferece uma liberdade criativa imensa, permitindo explorar diversas formas de
++                expressão digital.”
++              </p>
++              <strong>— Heitor Hermes</strong>
++            </div>
++          </div>
++        </div>
++      </section>
++
++      <section class="technology-section">
++        <div class="container">
++          <p class="section-title">como funciona</p>
++          <h2>Como funciona a tecnologia?</h2>
++          <div class="offer-tools">
++            <p>
++              Durante o curso você aprenderá a utilizar uma plataforma profissional de clonagem de voz e rosto. Esse
++              serviço possui um plano acessível e garante resultados de qualidade de estúdio. Você aprenderá a gravar
++              seu vídeo base e a gerar conteúdos ilimitados sem travamentos.
++            </p>
++            <p>
++              Também explicamos opções de ferramentas gratuitas, seus limites e quando vale a pena investir em um
++              upgrade.
++            </p>
++          </div>
++        </div>
++      </section>
++
++      <section class="faq-section">
++        <div class="container">
++          <p class="section-title">perguntas frequentes</p>
++          <h2>Perguntas Frequentes</h2>
++          <div class="faq">
++            <details>
++              <summary>Preciso ter experiência com IA ou vídeo?</summary>
++              <p>Não. O curso é para iniciantes e começa do básico. Você será guiado passo a passo para criar e personalizar seu clone digital.</p>
++            </details>
++            <details>
++              <summary>Quais equipamentos são necessários?</summary>
++              <p>Apenas um computador ou celular com câmera para gravar seu vídeo de referência. O restante é feito online.</p>
++            </details>
++            <details>
++              <summary>Há custos adicionais?</summary>
++              <p>A clonagem de voz e rosto usa uma plataforma profissional com plano mensal acessível. Durante o curso mostramos a diferença entre opções gratuitas e pagas para que você escolha a mais adequada ao seu projeto.</p>
++            </details>
++            <details>
++              <summary>Por quanto tempo terei acesso ao curso?</summary>
++              <p>O acesso é vitalício e inclui futuras atualizações sem custo adicional.</p>
++            </details>
++            <details>
++              <summary>Quando o curso começa?</summary>
++              <p>O curso começa em janeiro de 2026, mas o preço promocional é somente até 10/12/2025, depois disto o preço volta ao valor original. Essa é uma oportunidade única por um preço imperdivel.</p>
++            </details>
++          </div>
++        </div>
++      </section>
++
++      <section class="pricing-section offer-section" id="pricing">
++        <div class="container">
++          <p class="section-title">oferta da turma fundadora</p>
++          <h2>Oferta da Turma Fundadora – Válida até 10/12/2025</h2>
++          <div class="offer-copy">
++            <p>
++              O curso completo, com todos os módulos e suporte, custa normalmente <strong>R$ 1.400,00</strong>. Para a Turma
++              Fundadora, o valor é de apenas <strong>R$ 497</strong> à vista ou 12x de <strong>R$ 51,40</strong>, economia de 64%.
++              Esse preço só estará disponível até 10/12/2025.
++            </p>
++          </div>
++          <div class="offer-pricing">
++            <div class="price-highlight">
++              <span class="price-badge">Turma Fundadora · 64% OFF</span>
++              <span class="price-new">R$ 497 à vista</span>
++              <span class="price-split">ou 12x de R$ 51,40</span>
++              <span class="price-savings">Disponível até 10/12/2025</span>
++            </div>
++            <p class="price-note">
++              <span class="price-breakdown">R$ 497 dividido por 12 meses = R$ 1,36 por dia.</span>
++              Menos do que um café para aprender a se clonar com IA e criar vídeos de nível profissional.
++            </p>
++            <div class="cta-group">
++              <a class="cta-primary" href="https://pay.hotmart.com/H102137847D?bid=1763505435528" target="_blank">
++                <i class="fa-solid fa-bolt"></i> Quero garantir meu desconto de 64%
++              </a>
++            </div>
++          </div>
++        </div>
++      </section>
++
++      <section class="final-section" id="call-to-action">
++        <div class="container">
++          <span class="highlight">Pronto para criar o seu clone digital?</span>
++          <h2>Garantia de 7 dias que você já conhece da hotmart</h2>
++          <p>
++Se você não gostar ou se arrepender é só pedir o dinheiro de volta de forma segura e confiavel.
++          </p>
++          <a class="cta-primary" href="https://pay.hotmart.com/H102137847D?bid=1763505435528" target="_blank">
++            <i class="fa-solid fa-rocket"></i> Começar agora
++          </a>
++        </div>
++      </section>
++    </main>
++
++    <footer>
++      <div class="container">
++        <p>
++          © 2025 I.A. Me Clonei · Desenvolvido por
++          <a href="https://teckbird.com" target="_blank">Teckbird</a>
++        </p>
++        <p>Quer falar com nossa equipe? Estamos a um clique de distância.</p>
++        <a class="footer-cta" href="https://wa.me/49988971962" target="_blank" rel="noopener">
++          <i class="fa-brands fa-whatsapp"></i>
++          Falar com a equipe pelo WhatsApp
++        </a>
++      </div>
++    </footer>
++
++    <script>
++      const STYLE_MAP = {
++        "📸 Polaroid Vintage":
++          "Luz suave difusa, aparência de filme com granulação leve e vinheta discreta. Tons quentes, levemente desbotados, estética retrô com textura orgânica.",
++        "🎞️ Preto e Branco Artístico":
++          "Iluminação de alto contraste, pretos profundos, realce controlado nas áreas claras. Estilo film noir com granulação sutil e atmosfera dramática.",
++        "🌅 Golden Hour":
++          "Contraluz quente de pôr do sol, flare natural e sombras suaves. Pele iluminada com tom dourado, composição romântica e cinematográfica.",
++        "🏙️ Urbana Neon":
++          "Reflexos de luz neon, bokeh de cidade ao fundo, atmosfera moderna e energética. Contraste médio e cores vibrantes com brilho controlado.",
++        "👔 Retrato Corporativo":
++          "Fundo neutro, luz de estúdio equilibrada, aparência limpa e profissional. Fidelidade de pele e tecido com contraste moderado.",
++        "💎 Editorial de Luxo":
++          "Luz key a 45° com rim sutil, recorte de contorno suave. Estilo de revista, foco em textura de pele e tecidos premium, acabamento refinado.",
++        "🌿 Retrato Externo Natural":
++          "Iluminação difusa natural, sombras leves, tons suaves e realistas. Autenticidade e integração com o ambiente, sensação leve e natural.",
++        "✨ Bokeh Suave":
++          "Luz direcionada no rosto, fundo propositalmente desfocado com bokeh cremoso. Cores neutras, foco preciso e contraste equilibrado.",
++        "❄️ Luz Fria / Urbana":
++          "Tom azulado, key lateral e fill suave. Aparência contemporânea e cinematográfica, sensação de elegância e calma moderna."
++      };
++
++      const HAIRSTYLE_MAP = {
++        "Sem alteração": "Mantendo o cabelo exatamente como na foto original",
++        "🌊 Ondas Soltas": "Cabelo com ondas suaves e soltas, textura natural e movimentado, aparência descontraída",
++        "💇 Liso Brilhante": "Cabelo completamente liso e brilhante, acabamento refinado e sofisticado",
++        "🌀 Cachos Definidos": "Cabelo com cachos bem definidos e texturizados, volume natural e movimento elegante",
++        "🎀 Rabo de Cavalo": "Cabelo preso em rabo de cavalo limpo, penteado elegante e estruturado",
++        "✨ Coque Alto": "Cabelo em coque alto e volumoso, penteado sofisticado e polido",
++        "🌙 Meia Praia": "Cabelo preso na meia praia de forma descontraída, aspecto beach-casual",
++        "💃 Cabelo Curto": "Cabelo curto e bem cortado, corte moderno e bem definido",
++        "🌸 Cabelo Comprido": "Cabelo longo e voluminoso, caindo natural sobre os ombros e costas"
++      };
++
++      const promptState = {
++        styles: new Set(),
++        hairstyle: "Sem alteração",
++        format: "vertical",
++      };
++
++      const copyPrompt = (text, button) => {
++        navigator.clipboard.writeText(text).then(() => {
++          const original = button.innerHTML;
++          button.classList.add("copied");
++          button.innerHTML =
++            '<i class="fa-solid fa-check"></i> Copiado!';
++          setTimeout(() => {
++            button.classList.remove("copied");
++            button.innerHTML = original;
++          }, 1800);
++        });
++      };
++
++      const buildPrompt = (description) => {
++        let prompt =
++          "Crie uma imagem hiper-realista em 8K mantendo exatamente o rosto, tom de pele e identidade corporal da pessoa da foto enviada — sem alterações físicas.\n\n";
++
++        if (promptState.hairstyle !== "Sem alteração") {
++          prompt += `Modificação de Cabelo:\n${HAIRSTYLE_MAP[promptState.hairstyle]}\n\n`;
++        }
++
++        if (description) {
++          prompt += `Com base na descrição: ${description}\n\n`;
++        }
++
++        if (promptState.styles.size) {
++          prompt += "Modificadores de estilo:\n";
++          promptState.styles.forEach((style) => {
++            prompt += `• ${style}\n${STYLE_MAP[style]}\n\n`;
++          });
++        }
++
++        prompt += "Detalhes técnicos:\n";
++        prompt += "• Lente: 50mm ou 85mm f/1.8\n";
++        prompt += `• Enquadramento: ${
++          promptState.format === "vertical"
++            ? "vertical, foco no rosto e textura realista da pele"
++            : "horizontal, cena ampla"
++        }\n`;
++        prompt += "• Estilo: realismo elevado, fidelidade fotográfica, iluminação cinematográfica\n";
++        prompt += "• Acabamento: nítido, equilibrado, natural\n\n";
++        prompt +=
++          "Negativas: sem distorções, sem pele plástica, sem exageros de nitidez, sem alteração facial, sem artefatos digitais.";
++
++        return prompt;
++      };
++
++      const renderPrompt = () => {
++        const descriptionInput = document.getElementById("description");
++        const promptContainer = document.getElementById("promptContainer");
++        const badge = document.getElementById("badge");
++
++        if (!promptContainer || !descriptionInput || !badge) {
++          return;
++        }
++
++        const description = descriptionInput.value.trim();
++        const prompt = buildPrompt(description);
++
++        const display = document.createElement("div");
++        display.className = "prompt-display";
++        display.textContent = prompt;
++
++        const copyBtn = document.createElement("button");
++        copyBtn.className = "copy-button";
++        copyBtn.innerHTML = '<i class="fa-regular fa-copy"></i> Copiar Prompt';
++        copyBtn.addEventListener("click", () => copyPrompt(prompt, copyBtn));
++
++        promptContainer.replaceChildren(display, copyBtn);
++        badge.style.display = "inline-block";
++      };
++
++      const attachPromptGenerator = () => {
++        const descriptionInput = document.getElementById("description");
++        const generateBtn = document.getElementById("generateBtn");
++
++        if (!descriptionInput || !generateBtn) {
++          return;
++        }
++
++        document.querySelectorAll("[data-format]").forEach((btn) => {
++          btn.addEventListener("click", (event) => {
++            document
++              .querySelectorAll("[data-format]")
++              .forEach((b) => b.classList.remove("selected"));
++            const target = event.currentTarget;
++            target.classList.add("selected");
++            promptState.format = target.dataset.format || "vertical";
++          });
++        });
++
++        document.querySelectorAll(".hairstyle-option").forEach((btn) => {
++          btn.addEventListener("click", (event) => {
++            document
++              .querySelectorAll(".hairstyle-option")
++              .forEach((b) => b.classList.remove("selected"));
++            const target = event.currentTarget;
++            target.classList.add("selected");
++            promptState.hairstyle = target.dataset.hairstyle || "Sem alteração";
++          });
++        });
++
++        document.querySelectorAll(".style-option").forEach((btn) => {
++          btn.addEventListener("click", (event) => {
++            const target = event.currentTarget;
++            const style = target.dataset.style;
++            if (!style) return;
++
++            if (promptState.styles.has(style)) {
++              promptState.styles.delete(style);
++              target.classList.remove("selected");
++            } else {
++              promptState.styles.add(style);
++              target.classList.add("selected");
++            }
++          });
++        });
++
++        generateBtn.addEventListener("click", renderPrompt);
++      };
++
++      document.addEventListener("DOMContentLoaded", attachPromptGenerator);
++
++      const QUALITY_PRIORITY = ["highres", "hd2880", "hd2160", "hd1440", "hd1080"];
++      const managedIframes = Array.from(document.querySelectorAll("[data-yt-managed]"));
++      const ytPlayers = new Map();
++      let youTubeAPIRequested = false;
++
++      const enforceMinimumQuality = (player) => {
++        if (!player || typeof player.getAvailableQualityLevels !== "function") {
++          return;
++        }
++
++        const levels = player.getAvailableQualityLevels();
++        if (!levels || !levels.length) {
++          player.setPlaybackQuality("hd1080");
++          return;
++        }
++
++        const preferred = QUALITY_PRIORITY.find((quality) => levels.includes(quality));
++        const targetQuality = preferred || "hd1080";
++        const currentQuality =
++          typeof player.getPlaybackQuality === "function" ? player.getPlaybackQuality() : null;
++
++        if (currentQuality !== targetQuality) {
++          player.setPlaybackQuality(targetQuality);
++        }
++
++        if (!preferred && !levels.includes("hd1080") && levels[0] && levels[0] !== targetQuality) {
++          player.setPlaybackQuality(levels[0]);
++        }
++      };
++
++      const handleReady = (iframe) => (event) => {
++        const player = event.target;
++
++        if (iframe.dataset.unmute === "true") {
++          player.unMute();
++          player.setVolume(100);
++        }
++
++        enforceMinimumQuality(player);
++      };
++
++      const handleStateChange = (event) => {
++        if (
++          event.data === window.YT.PlayerState.BUFFERING ||
++          event.data === window.YT.PlayerState.PLAYING
++        ) {
++          enforceMinimumQuality(event.target);
++        }
++      };
++
++      const handleQualityChange = (event) => {
++        enforceMinimumQuality(event.target);
++      };
++
++      const initPlayer = (iframe) => {
++        if (!iframe.id) {
++          iframe.id = `yt-managed-${ytPlayers.size + 1}`;
++        }
++
++        if (ytPlayers.has(iframe.id)) {
++          return;
++        }
++
++        const player = new YT.Player(iframe.id, {
++          events: {
++            onReady: handleReady(iframe),
++            onStateChange: handleStateChange,
++            onPlaybackQualityChange: handleQualityChange,
++          },
++        });
++
++        ytPlayers.set(iframe.id, player);
++      };
++
++      const initAllPlayers = () => {
++        managedIframes.forEach((iframe) => initPlayer(iframe));
++      };
++
++      function onYouTubeIframeAPIReady() {
++        initAllPlayers();
++      }
++
++      window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
++
++      const requestYouTubeAPI = () => {
++        if (window.YT && window.YT.Player) {
++          initAllPlayers();
++          return;
++        }
++
++        if (youTubeAPIRequested) {
++          return;
++        }
++
++        const script = document.createElement("script");
++        script.src = "https://www.youtube.com/iframe_api";
++        script.async = true;
++        document.head.appendChild(script);
++        youTubeAPIRequested = true;
++      };
++
++      const primaryFrame = managedIframes[0];
++
++      if (primaryFrame) {
++        primaryFrame.setAttribute("tabindex", "-1");
++      }
++
++      if ("IntersectionObserver" in window && primaryFrame) {
++        const heroObserver = new IntersectionObserver(
++          (entries, observer) => {
++            entries.forEach((entry) => {
++              if (entry.isIntersecting) {
++                observer.disconnect();
++                requestYouTubeAPI();
++              }
++            });
++          },
++          { rootMargin: "200px" }
++        );
++
++        heroObserver.observe(primaryFrame);
++      } else if (primaryFrame) {
++        window.addEventListener("load", () => {
++          if ("requestIdleCallback" in window) {
++            requestIdleCallback(requestYouTubeAPI);
++          } else {
++            setTimeout(requestYouTubeAPI, 600);
++          }
++        });
++      }
++
++      if ("scrollRestoration" in history) {
++        history.scrollRestoration = "manual";
++      }
++
++      const ensureScrollTop = () => {
++        window.scrollTo({ top: 0, left: 0, behavior: "auto" });
++      };
++
++      const scheduleScrollReset = () => {
++        ensureScrollTop();
++        setTimeout(ensureScrollTop, 120);
++      };
++
++      document.addEventListener("DOMContentLoaded", scheduleScrollReset);
++      window.addEventListener("load", scheduleScrollReset);
++      window.addEventListener("pageshow", (event) => {
++        if (event.persisted) {
++          scheduleScrollReset();
++        }
++      });
++    </script>
++  </body>
+ </html>
+ 
+EOF
+)
