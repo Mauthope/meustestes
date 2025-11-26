@@ -3,577 +3,324 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerador de Prompts para IA</title>
+    <title>Pare de Apagar a Própria Luz | Metodologia Leandro Ladeira</title>
     <style>
+        :root {
+            --bg: #030712;
+            --card: rgba(255, 255, 255, 0.03);
+            --text: #e5e7eb;
+            --muted: #9ca3af;
+            --accent: #f59e0b;
+            --line: rgba(255, 255, 255, 0.1);
+        }
+
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #020617 0%, #0f172a 50%, #1e293b 100%);
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: radial-gradient(circle at 20% 20%, rgba(245, 158, 11, 0.08), transparent 25%),
+                        radial-gradient(circle at 80% 0%, rgba(59, 130, 246, 0.1), transparent 30%),
+                        var(--bg);
+            color: var(--text);
             min-height: 100vh;
-            color: #e2e8f0;
+            padding: 48px 20px 72px;
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1080px;
             margin: 0 auto;
-            padding: 24px;
         }
 
-        .header {
-            margin-bottom: 48px;
-        }
-
-        .header-title {
-            display: flex;
+        header {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 28px;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-
-        .sparkles-icon {
-            width: 32px;
-            height: 32px;
-            color: #fbbf24;
-        }
-
-        h1 {
-            font-size: 36px;
-            font-weight: bold;
-            color: white;
-        }
-
-        .header-desc {
-            font-size: 18px;
-            color: #cbd5e1;
-        }
-
-        .grid-layout {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 24px;
-        }
-
-        .left-column {
-            grid-column: 1 / 3;
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-        }
-
-        .right-column {
-            grid-column: 3;
-            height: fit-content;
-            position: sticky;
-            top: 24px;
-        }
-
-        .card {
-            background-color: rgba(30, 41, 59, 0.5);
-            border: 1px solid #475569;
-            border-radius: 8px;
-            padding: 20px;
-        }
-
-        .card-header {
-            margin-bottom: 16px;
-        }
-
-        .card-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: white;
-            margin-bottom: 4px;
-        }
-
-        .card-description {
-            font-size: 14px;
-            color: #94a3b8;
-        }
-
-        .form-group {
-            margin-bottom: 16px;
-        }
-
-        textarea {
-            width: 100%;
-            min-height: 128px;
-            background-color: rgba(71, 85, 105, 0.3);
-            border: 1px solid #475569;
-            border-radius: 6px;
-            padding: 12px;
-            color: white;
-            font-family: inherit;
-            font-size: 14px;
-            resize: vertical;
-        }
-
-        textarea::placeholder {
-            color: #94a3b8;
-        }
-
-        textarea:focus {
-            outline: none;
-            border-color: #fbbf24;
-            background-color: rgba(71, 85, 105, 0.5);
-        }
-
-        .button-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
-
-        .option-button {
-            padding: 12px;
-            background-color: rgba(71, 85, 105, 0.2);
-            border: 2px solid #475569;
-            border-radius: 6px;
-            color: white;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-align: left;
-        }
-
-        .option-button:hover {
-            border-color: #64748b;
-        }
-
-        .option-button.selected {
-            border-color: #fbbf24;
-            background-color: rgba(251, 191, 36, 0.1);
-        }
-
-        .option-label {
-            font-weight: 500;
-            font-size: 14px;
-            margin-bottom: 4px;
-        }
-
-        .option-desc {
-            font-size: 12px;
-            color: #94a3b8;
-        }
-
-        .hairstyle-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
-
-        .style-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
-
-        .generate-button {
-            width: 100%;
-            padding: 24px;
-            background: linear-gradient(to right, #f59e0b, #d97706);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-weight: 600;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .generate-button:hover {
-            background: linear-gradient(to right, #d97706, #b45309);
-        }
-
-        .output-card {
-            background-color: rgba(30, 41, 59, 0.5);
-            border: 1px solid #475569;
-            border-radius: 8px;
-            padding: 20px;
-        }
-
-        .output-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
         }
 
         .badge {
-            display: inline-block;
-            padding: 4px 12px;
-            background-color: rgba(148, 163, 184, 0.2);
-            border: 1px solid #64748b;
-            border-radius: 4px;
-            font-size: 12px;
-            color: #cbd5e1;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--card);
+            border: 1px solid var(--line);
+            color: var(--accent);
+            padding: 10px 14px;
+            border-radius: 999px;
+            font-weight: 600;
+            letter-spacing: 0.02em;
         }
 
-        .prompt-display {
-            background-color: rgba(15, 23, 42, 0.5);
-            border: 1px solid #475569;
-            border-radius: 6px;
-            padding: 16px;
-            color: #cbd5e1;
+        h1 {
+            font-size: clamp(32px, 4vw, 48px);
+            line-height: 1.1;
+            margin: 16px 0 14px;
+            color: #f9fafb;
+        }
+
+        .lead {
+            font-size: 18px;
+            line-height: 1.6;
+            color: var(--muted);
+        }
+
+        .cta-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .button-primary {
+            background: linear-gradient(135deg, #f59e0b, #ea580c);
+            color: #0b0f1a;
+            border: none;
+            padding: 14px 18px;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 150ms ease, box-shadow 150ms ease;
+            box-shadow: 0 10px 30px rgba(245, 158, 11, 0.25);
+            text-decoration: none;
+        }
+
+        .button-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(245, 158, 11, 0.35);
+        }
+
+        .button-secondary {
+            border: 1px solid var(--line);
+            background: var(--card);
+            color: var(--text);
+            padding: 14px 18px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: border-color 150ms ease, transform 150ms ease;
+            text-decoration: none;
+        }
+
+        .button-secondary:hover {
+            border-color: rgba(245, 158, 11, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .grid {
+            margin-top: 48px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 18px;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            padding: 20px;
+            backdrop-filter: blur(6px);
+        }
+
+        .card h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #f3f4f6;
+        }
+
+        .card p {
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .quote {
+            margin-top: 40px;
+            padding: 22px;
+            border-left: 4px solid var(--accent);
+            background: rgba(245, 158, 11, 0.05);
+            color: #fef3c7;
+            border-radius: 12px;
+            line-height: 1.6;
+        }
+
+        .timeline {
+            display: grid;
+            gap: 18px;
+            margin-top: 32px;
+        }
+
+        .step {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 12px;
+            align-items: start;
+        }
+
+        .step-number {
+            width: 36px;
+            height: 36px;
+            border-radius: 12px;
+            background: rgba(245, 158, 11, 0.12);
+            display: grid;
+            place-items: center;
+            color: var(--accent);
+            font-weight: 800;
+        }
+
+        .preview {
+            margin-top: 48px;
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            padding: 24px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+        }
+
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .preview-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #f9fafb;
+        }
+
+        .preview-tag {
+            padding: 6px 12px;
+            border-radius: 999px;
+            background: rgba(59, 130, 246, 0.1);
+            color: #bfdbfe;
             font-size: 13px;
-            max-height: 400px;
-            overflow-y: auto;
-            white-space: pre-wrap;
-            word-break: break-word;
-            margin-bottom: 16px;
-            min-height: 200px;
-            font-family: 'Monaco', 'Courier New', monospace;
+            font-weight: 600;
+            border: 1px solid rgba(59, 130, 246, 0.3);
         }
 
-        .empty-state {
+        .preview-body {
+            color: var(--muted);
+            line-height: 1.7;
+            white-space: pre-line;
+        }
+
+        footer {
+            margin-top: 48px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 18px;
+            align-items: center;
+        }
+
+        .author {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 32px 0;
-            text-align: center;
+            gap: 6px;
         }
 
-        .empty-icon {
-            width: 32px;
-            height: 32px;
-            opacity: 0.3;
-            margin-bottom: 8px;
+        .author strong {
+            color: #f3f4f6;
+            font-size: 16px;
         }
 
-        .copy-button {
-            width: 100%;
-            padding: 10px;
-            background-color: transparent;
-            border: 1px solid #475569;
-            border-radius: 6px;
-            color: white;
-            font-weight: 500;
+        .meta {
+            color: var(--muted);
             font-size: 14px;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .copy-button:hover {
-            background-color: rgba(71, 85, 105, 0.3);
-            border-color: #64748b;
-        }
-
-        .copy-button.copied {
-            background-color: rgba(34, 197, 94, 0.1);
-            border-color: #22c55e;
-            color: #86efac;
-        }
-
-        @media (max-width: 1024px) {
-            .grid-layout {
-                grid-template-columns: 1fr;
-            }
-
-            .left-column {
-                grid-column: 1;
-            }
-
-            .right-column {
-                grid-column: 1;
-                position: static;
-            }
-
-            .button-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .hairstyle-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .style-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 640px) {
-            .button-grid,
-            .hairstyle-grid,
-            .style-grid {
-                grid-template-columns: 1fr;
-            }
-
-            h1 {
-                font-size: 28px;
-            }
-
-            .header-desc {
-                font-size: 14px;
-            }
-        }
-
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: rgba(15, 23, 42, 0.5);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #475569;
-            border-radius: 3px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #64748b;
         }
     </style>
 </head>
 <body>
-    <main class="container">
-        <div class="header">
-            <div class="header-title">
-                <svg class="sparkles-icon" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M13 2l3.29 3.29a1 1 0 0 0 .33.21l4.38 1.46a1 1 0 0 1 .37 1.74l-4.38 1.46a1 1 0 0 0-.33.21L13 14l-3.29-3.29a1 1 0 0 0-.33-.21l-4.38-1.46a1 1 0 0 1-.37-1.74l4.38-1.46a1 1 0 0 0 .33-.21L13 2M12 17l1.5 1.5a1 1 0 0 0 .33.21l2 .67a1 1 0 0 1 .37 1.74l-2 .67a1 1 0 0 0-.33.21L12 24l-1.5-1.5a1 1 0 0 0-.33-.21l-2-.67a1 1 0 0 1-.37-1.74l2-.67a1 1 0 0 0 .33-.21L12 17M3 9l1.5 1.5a1 1 0 0 0 .33.21l2 .67a1 1 0 0 1 .37 1.74l-2 .67a1 1 0 0 0-.33.21L3 15l-1.5-1.5a1 1 0 0 0-.33-.21l-2-.67a1 1 0 0 1-.37-1.74l2-.67a1 1 0 0 0 .33-.21L3 9z"/>
-                </svg>
-                <h1>Gerador de Prompts</h1>
+    <div class="container">
+        <header>
+            <div>
+                <div class="badge">Metodologia Leandro Ladeira · IA + Marca Pessoal</div>
+                <h1>Pare de apagar a própria luz.</h1>
+                <p class="lead">A tecnologia criativa é a ponte entre quem você é e quem o mundo precisa conhecer. Com IA, você não precisa esperar o momento certo para aparecer: ela acelera a versão de você que já está no futuro.</p>
+                <div class="cta-row">
+                    <a class="button-primary" href="#preview">Ver prévia do curso</a>
+                    <a class="button-secondary" href="#jornada">Explorar a jornada</a>
+                </div>
             </div>
-            <p class="header-desc">Crie prompts profissionais para geração de imagens hiper-realistas</p>
-        </div>
-
-        <div class="grid-layout">
-            <!-- Left Column -->
-            <div class="left-column">
-                <!-- Description Card -->
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">Descrição da Imagem</div>
-                        <div class="card-description">Descreva o que você deseja na imagem</div>
-                    </div>
-                    <textarea id="description" placeholder="Ex: mulher caminhando na praia ao pôr do sol, cabelo ao vento e expressão tranquila"></textarea>
-                </div>
-
-                <!-- Format Card -->
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">Formato</div>
-                        <div class="card-description">Escolha o tamanho da imagem</div>
-                    </div>
-                    <div class="button-grid">
-                        <button class="option-button selected" data-format="vertical">
-                            <div class="option-label">Vertical (1080x1920)</div>
-                            <div class="option-desc">Para retratos</div>
-                        </button>
-                        <button class="option-button" data-format="horizontal">
-                            <div class="option-label">Horizontal (16:9)</div>
-                            <div class="option-desc">Para cenas amplas</div>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Hairstyle Card -->
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">Estilo de Cabelo</div>
-                        <div class="card-description">Escolha como você deseja que o cabelo apareça</div>
-                    </div>
-                    <div class="hairstyle-grid">
-                        <button class="option-button selected hairstyle-option" data-hairstyle="Sem alteração">Sem alteração</button>
-                        <button class="option-button hairstyle-option" data-hairstyle="🌊 Ondas Soltas">🌊 Ondas Soltas</button>
-                        <button class="option-button hairstyle-option" data-hairstyle="💇 Liso Brilhante">💇 Liso Brilhante</button>
-                        <button class="option-button hairstyle-option" data-hairstyle="🌀 Cachos Definidos">🌀 Cachos Definidos</button>
-                        <button class="option-button hairstyle-option" data-hairstyle="🎀 Rabo de Cavalo">🎀 Rabo de Cavalo</button>
-                        <button class="option-button hairstyle-option" data-hairstyle="✨ Coque Alto">✨ Coque Alto</button>
-                        <button class="option-button hairstyle-option" data-hairstyle="🌙 Meia Praia">🌙 Meia Praia</button>
-                        <button class="option-button hairstyle-option" data-hairstyle="💃 Cabelo Curto">💃 Cabelo Curto</button>
-                        <button class="option-button hairstyle-option" data-hairstyle="🌸 Cabelo Comprido">🌸 Cabelo Comprido</button>
-                    </div>
-                </div>
-
-                <!-- Styles Card -->
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">Estilos Visuais</div>
-                        <div class="card-description">Selecione um ou mais estilos para sua imagem</div>
-                    </div>
-                    <div class="style-grid">
-                        <button class="option-button style-option" data-style="📸 Polaroid Vintage">📸 Polaroid Vintage</button>
-                        <button class="option-button style-option" data-style="🎞️ Preto e Branco Artístico">🎞️ P&B Artístico</button>
-                        <button class="option-button style-option" data-style="🌅 Golden Hour">🌅 Golden Hour</button>
-                        <button class="option-button style-option" data-style="🏙️ Urbana Neon">🏙️ Urbana Neon</button>
-                        <button class="option-button style-option" data-style="👔 Retrato Corporativo">👔 Corporativo</button>
-                        <button class="option-button style-option" data-style="💎 Editorial de Luxo">💎 Editorial de Luxo</button>
-                        <button class="option-button style-option" data-style="🌿 Retrato Externo Natural">🌿 Natural</button>
-                        <button class="option-button style-option" data-style="✨ Bokeh Suave">✨ Bokeh Suave</button>
-                        <button class="option-button style-option" data-style="❄️ Luz Fria / Urbana">❄️ Luz Fria</button>
-                    </div>
-                </div>
-
-                <!-- Generate Button -->
-                <button class="generate-button" id="generateBtn">
-                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M13 2l3.29 3.29a1 1 0 0 0 .33.21l4.38 1.46a1 1 0 0 1 .37 1.74l-4.38 1.46a1 1 0 0 0-.33.21L13 14l-3.29-3.29a1 1 0 0 0-.33-.21l-4.38-1.46a1 1 0 0 1-.37-1.74l4.38-1.46a1 1 0 0 0 .33-.21L13 2M12 17l1.5 1.5a1 1 0 0 0 .33.21l2 .67a1 1 0 0 1 .37 1.74l-2 .67a1 1 0 0 0-.33.21L12 24l-1.5-1.5a1 1 0 0 0-.33-.21l-2-.67a1 1 0 0 1-.37-1.74l2-.67a1 1 0 0 0 .33-.21L12 17M3 9l1.5 1.5a1 1 0 0 0 .33.21l2 .67a1 1 0 0 1 .37 1.74l-2 .67a1 1 0 0 0-.33.21L3 15l-1.5-1.5a1 1 0 0 0-.33-.21l-2-.67a1 1 0 0 1-.37-1.74l2-.67a1 1 0 0 0 .33-.21L3 9z"/>
-                    </svg>
-                    Gerar Prompt
-                </button>
+            <div class="card">
+                <h3>O manifesto</h3>
+                <p>Nasceu para existir, ser visto e deixar sua marca. O mundo não se transforma quando você se esconde — ele muda quando você decide aparecer, com a sua essência, história e coragem.</p>
             </div>
+        </header>
 
-            <!-- Right Column -->
-            <div class="right-column">
-                <div class="output-card">
-                    <div class="output-header">
-                        <div class="card-title">Seu Prompt</div>
-                        <div id="badge" class="badge" style="display: none;">Pronto para copiar</div>
-                    </div>
-                    <div id="promptContainer">
-                        <div class="empty-state">
-                            <svg class="empty-icon" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M13 2l3.29 3.29a1 1 0 0 0 .33.21l4.38 1.46a1 1 0 0 1 .37 1.74l-4.38 1.46a1 1 0 0 0-.33.21L13 14l-3.29-3.29a1 1 0 0 0-.33-.21l-4.38-1.46a1 1 0 0 1-.37-1.74l4.38-1.46a1 1 0 0 0 .33-.21L13 2M12 17l1.5 1.5a1 1 0 0 0 .33.21l2 .67a1 1 0 0 1 .37 1.74l-2 .67a1 1 0 0 0-.33.21L12 24l-1.5-1.5a1 1 0 0 0-.33-.21l-2-.67a1 1 0 0 1-.37-1.74l2-.67a1 1 0 0 0 .33-.21L12 17M3 9l1.5 1.5a1 1 0 0 0 .33.21l2 .67a1 1 0 0 1 .37 1.74l-2 .67a1 1 0 0 0-.33.21L3 15l-1.5-1.5a1 1 0 0 0-.33-.21l-2-.67a1 1 0 0 1-.37-1.74l2-.67a1 1 0 0 0 .33-.21L3 9z"/>
-                            </svg>
-                            <p>Preencha os campos e clique em Gerar Prompt</p>
-                        </div>
-                    </div>
-                </div>
+        <div class="grid">
+            <div class="card">
+                <h3>Aponte sua luz</h3>
+                <p>Passei anos tentando me encaixar, me calando para não incomodar e cobrando perfeição. Aprendi que a tecnologia não inventa um personagem: ela revela o seu eu do futuro, pronto para inspirar.</p>
+            </div>
+            <div class="card">
+                <h3>IA como ponte</h3>
+                <p>A IA dá forma ao profissional, criador, mentor ou influenciador que você já carrega. Ela simplifica a criação de presença e conteúdo, mantendo o propósito no centro.</p>
+            </div>
+            <div class="card">
+                <h3>Pronto antes de se sentir pronto</h3>
+                <p>Não espere a permissão perfeita. Construí este curso para que você mostre quem é, mesmo achando que ainda falta algo. A versão futura já está pronta para ser apresentada.</p>
             </div>
         </div>
-    </main>
 
-    <script>
-        const STYLES = {
-            "📸 Polaroid Vintage": "Luz suave difusa, aparência de filme com granulação leve e vinheta discreta. Tons quentes, levemente desbotados, estética retrô com textura orgânica.",
-            "🎞️ Preto e Branco Artístico": "Iluminação de alto contraste, pretos profundos, realce controlado nas áreas claras. Estilo film noir com granulação sutil e atmosfera dramática.",
-            "🌅 Golden Hour": "Contraluz quente de pôr do sol, flare natural e sombras suaves. Pele iluminada com tom dourado, composição romântica e cinematográfica.",
-            "🏙️ Urbana Neon": "Reflexos de luz neon, bokeh de cidade ao fundo, atmosfera moderna e energética. Contraste médio e cores vibrantes com brilho controlado.",
-            "👔 Retrato Corporativo": "Fundo neutro, luz de estúdio equilibrada, aparência limpa e profissional. Fidelidade de pele e tecido com contraste moderado.",
-            "💎 Editorial de Luxo": "Luz key a 45° com rim sutil, recorte de contorno suave. Estilo de revista, foco em textura de pele e tecidos premium, acabamento refinado.",
-            "🌿 Retrato Externo Natural": "Iluminação difusa natural, sombras leves, tons suaves e realistas. Autenticidade e integração com o ambiente, sensação leve e natural.",
-            "✨ Bokeh Suave": "Luz direcionada no rosto, fundo propositalmente desfocado com bokeh cremoso. Cores neutras, foco preciso e contraste equilibrado.",
-            "❄️ Luz Fria / Urbana": "Tom azulado, key lateral e fill suave. Aparência contemporânea e cinematográfica, sensação de elegância e calma moderna."
-        };
+        <div class="quote">
+            “Eu, Maurício Grigol, vivi essa transformação. Parei de diminuir meu espaço para caber. Hoje eu guio você a fazer o mesmo, passo a passo.”
+        </div>
 
-        const HAIRSTYLES = {
-            "Sem alteração": "Mantendo o cabelo exatamente como na foto original",
-            "🌊 Ondas Soltas": "Cabelo com ondas suaves e soltas, textura natural e movimentado, aparência descontraída",
-            "💇 Liso Brilhante": "Cabelo completamente liso e brilhante, acabamento refinado e sofisticado",
-            "🌀 Cachos Definidos": "Cabelo com cachos bem definidos e texturizados, volume natural e movimento elegante",
-            "🎀 Rabo de Cavalo": "Cabelo preso em rabo de cavalo limpo, penteado elegante e estruturado",
-            "✨ Coque Alto": "Cabelo em coque alto e volumoso, penteado sofisticado e polido",
-            "🌙 Meia Praia": "Cabelo preso na meia praia de forma descontraída, aspecto beach-casual",
-            "💃 Cabelo Curto": "Cabelo curto e bem cortado, corte moderno e bem definido",
-            "🌸 Cabelo Comprido": "Cabelo longo e voluminoso, caindo natural sobre os ombros e costas"
-        };
+        <section id="jornada" class="timeline">
+            <div class="step">
+                <div class="step-number">1</div>
+                <div>
+                    <h3>Reconhecer a chama</h3>
+                    <p class="lead" style="font-size:16px;">Clarifique sua essência, história e coragem — o trio que sustenta uma presença autêntica.</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <div>
+                    <h3>Construir o avatar</h3>
+                    <p class="lead" style="font-size:16px;">Use IA para materializar sua marca, imagem e narrativa sem perder identidade.</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <div>
+                    <h3>Publicar e aparecer</h3>
+                    <p class="lead" style="font-size:16px;">Crie conteúdo que inspira e atrai, ocupando o espaço que sempre foi seu.</p>
+                </div>
+            </div>
+        </section>
 
-        let selectedStyles = [];
-        let selectedHairstyle = "Sem alteração";
-        let selectedFormat = "vertical";
+        <section id="preview" class="preview">
+            <div class="preview-header">
+                <div class="preview-title">Prévia do curso</div>
+                <div class="preview-tag">Sempre disponível</div>
+            </div>
+            <div class="preview-body">
+                Pare de apagar a própria luz. Lá no fundo, você sabe: não nasceu para passar despercebido. Nasceu para existir, ser visto e deixar a sua marca.
 
-        // Format buttons
-        document.querySelectorAll('[data-format]').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                document.querySelectorAll('[data-format]').forEach(b => b.classList.remove('selected'));
-                e.target.closest('[data-format]').classList.add('selected');
-                selectedFormat = e.target.closest('[data-format]').dataset.format;
-            });
-        });
+                A tecnologia criativa é a ponte entre quem você é e quem o mundo precisa conhecer. Com a IA, você não precisa esperar o “momento certo” para aparecer. Ela te ajuda a dar forma à versão de você que já está no futuro — o profissional, o criador, o mentor, o influenciador, o você que inspira.
 
-        // Hairstyle buttons
-        document.querySelectorAll('.hairstyle-option').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                document.querySelectorAll('.hairstyle-option').forEach(b => b.classList.remove('selected'));
-                e.target.closest('.hairstyle-option').classList.add('selected');
-                selectedHairstyle = e.target.closest('.hairstyle-option').dataset.hairstyle;
-            });
-        });
+                Passei anos tentando me encaixar, me diminuindo para caber, me calando para não incomodar, me cobrando perfeição para não errar. Até entender o essencial: o mundo não se transforma quando você se esconde. Ele muda quando você decide aparecer.
 
-        // Style buttons
-        document.querySelectorAll('.style-option').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const style = e.target.closest('.style-option').dataset.style;
-                e.target.closest('.style-option').classList.toggle('selected');
-                
-                if (selectedStyles.includes(style)) {
-                    selectedStyles = selectedStyles.filter(s => s !== style);
-                } else {
-                    selectedStyles.push(style);
-                }
-            });
-        });
+                A IA não cria uma versão inventada de você. Ela revela o seu EU do futuro, aquele que você sempre soube que existia. E eu vou te guiar para que ele ganhe vida. Mostre ao mundo quem você é — e quem você nasceu para ser. A tecnologia constrói o avatar. O propósito… vem de você.
+            </div>
+        </section>
 
-        // Generate prompt
-        document.getElementById('generateBtn').addEventListener('click', () => {
-            const description = document.getElementById('description').value;
-            let prompt = "Crie uma imagem hiper-realista em 8K mantendo exatamente o rosto, tom de pele e identidade corporal da pessoa da foto enviada — sem alterações físicas.\n\n";
-
-            if (selectedHairstyle !== "Sem alteração") {
-                prompt += `Modificação de Cabelo:\n${HAIRSTYLES[selectedHairstyle]}\n\n`;
-            }
-
-            if (description) {
-                prompt += `Com base na descrição: ${description}\n\n`;
-            }
-
-            if (selectedStyles.length > 0) {
-                prompt += "Modificadores de estilo:\n";
-                selectedStyles.forEach((style) => {
-                    prompt += `• ${style}\n${STYLES[style]}\n\n`;
-                });
-            }
-
-            prompt += `Detalhes técnicos:\n`;
-            prompt += `• Lente: 50mm ou 85mm f/1.8\n`;
-            prompt += `• Enquadramento: ${selectedFormat === "vertical" ? "vertical, foco no rosto e textura realista da pele" : "horizontal, cena ampla"}\n`;
-            prompt += `• Estilo: realismo elevado, fidelidade fotográfica, iluminação cinematográfica\n`;
-            prompt += `• Acabamento: nítido, equilibrado, natural\n\n`;
-            prompt += `Negativas: sem distorções, sem pele plástica, sem exageros de nitidez, sem alteração facial, sem artefatos digitais.`;
-
-            const container = document.getElementById('promptContainer');
-            container.innerHTML = `
-                <div class="prompt-display">${escapeHtml(prompt)}</div>
-                <button class="copy-button" onclick="copyPrompt('${escapeJs(prompt)}')">
-                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
-                    </svg>
-                    Copiar Prompt
-                </button>
-            `;
-            document.getElementById('badge').style.display = 'block';
-        });
-
-        function copyPrompt(text) {
-            navigator.clipboard.writeText(text).then(() => {
-                const btn = event.target.closest('.copy-button');
-                const originalText = btn.innerHTML;
-                btn.classList.add('copied');
-                btn.innerHTML = '<svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg> Copiado!';
-                setTimeout(() => {
-                    btn.classList.remove('copied');
-                    btn.innerHTML = originalText;
-                }, 2000);
-            });
-        }
-
-        function escapeHtml(text) {
-            const map = {
-                '&': '&amp;',
-                '<': '&lt;',
-                '>': '&gt;',
-                '"': '&quot;',
-                "'": '&#039;'
-            };
-            return text.replace(/[&<>"']/g, m => map[m]);
-        }
-
-        function escapeJs(text) {
-            return text.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\n/g, '\\n');
-        }
-    </script>
+        <footer>
+            <div class="author">
+                <strong>Maurício Grigol</strong>
+                <div class="meta">Mentor convidado na metodologia Leandro Ladeira</div>
+                <div class="meta">Guiando você com IA e propósito, do bastidor ao palco.</div>
+            </div>
+            <div class="cta-row">
+                <a class="button-primary" href="#">Quero aparecer agora</a>
+                <a class="button-secondary" href="#jornada">Rever a jornada</a>
+            </div>
+        </footer>
+    </div>
 </body>
 </html>
