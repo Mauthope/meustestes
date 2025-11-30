@@ -6,10 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Crie seu clone digital e deixe ele gravar vídeos no seu lugar — sem câmera, sem microfone e sem aparecer. Curso ME CLONEI – Teckbird." />
 
-  <!-- FAVICON (opcional)
-  <link rel="icon" href="favicon.ico" />
-  -->
-
   <style>
     :root {
       --bg: #050510;
@@ -284,10 +280,6 @@
       padding: 10px;
     }
 
-    .hero-video small {
-      opacity: 0.8;
-    }
-
     .hero-floating-tag {
       position: absolute;
       right: 12px;
@@ -319,20 +311,26 @@
     }
 
     .section-header {
-      margin-bottom: 12px;
+      margin-bottom: 14px;
+      border-left: 3px solid var(--primary-strong);
+      padding-left: 12px;
     }
 
     .section-kicker {
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       text-transform: uppercase;
-      letter-spacing: 0.12em;
+      letter-spacing: 0.16em;
       color: var(--muted);
-      margin-bottom: 2px;
+      margin-bottom: 3px;
+      opacity: 0.9;
     }
 
     .section-title {
-      font-size: 1.25rem;
+      font-size: 1.45rem;
       margin-bottom: 4px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: #e5e7eb;
     }
 
     .section-sub {
@@ -544,13 +542,12 @@
         grid-template-columns: minmax(0, 1fr);
         padding: 18px 14px 20px;
       }
+      .hero-left {
+        order: 1;
+      }
       .hero-right {
-  order: 2; /* garante que o vídeo venha depois do texto */
-}
-.hero-left {
-  order: 1;
-}
-
+        order: 2;
+      }
       .hero-title {
         font-size: 1.6rem;
       }
@@ -628,59 +625,65 @@
       <div class="hero-right">
         <div class="hero-card">
           <div class="hero-video">
-      <!-- PLAYER YOUTUBE SHORTS LIMPO -->
-      <iframe
-        width="100%"
-        height="100%"
-        src="https://www.youtube.com/embed/1T3e1pew-oU?autoplay=0&mute=0&rel=0&modestbranding=1&showinfo=0&controls=1&playsinline=1&vq=hd720"
-        title="Me Clonei - Apresentação"
-        frameborder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        referrerpolicy="strict-origin-when-cross-origin"
-        allowfullscreen
-        style="width:100%; height:100%; border:0; border-radius:18px; display:block;"
-      ></iframe>
-    </div>
-    <div class="hero-floating-tag">
-      <span>◎</span> “Você do futuro” gravando por você
-    </div>
-  </div>
-</div>
+            <!-- PLAYER YOUTUBE SHORTS LIMPO -->
+            <iframe
+              width="100%"
+              height="100%"
+              src="https://www.youtube.com/embed/1T3e1pew-oU?autoplay=0&mute=0&rel=0&modestbranding=1&showinfo=0&controls=1&playsinline=1&vq=hd720"
+              title="Me Clonei - Apresentação"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin"
+              allowfullscreen
+              style="width:100%; height:100%; border:0; border-radius:18px; display:block;"
+            ></iframe>
+          </div>
+          <div class="hero-floating-tag">
+            <span>◎</span> “Você do futuro” gravando por você
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- SEÇÃO 1 – DOR / URGÊNCIA OCULTA -->
     <section class="section" id="sec-dor">
       <div class="section-header">
-        <div class="section-kicker">Para quem sente que já deveria estar aparecendo</div>
-        <h2 class="section-title">Você não nasceu para passar despercebido — só faltou um jeito seguro de aparecer.</h2>
+        <div class="section-kicker">O problema real</div>
+        <h2 class="section-title">O que está te travando hoje para criar vídeos?</h2>
+        <p class="section-sub">
+          Antes de falar de clone digital, vamos falar daquilo que te impede de apertar o botão “gravar”.
+        </p>
       </div>
 
       <div class="two-columns">
         <div>
-          <p><strong>Você já sentiu que tem algo grande para mostrar...</strong> mas sempre trava na hora de gravar?</p>
-          <p>Câmera ligada, coração acelerado, mil julgamentos na cabeça. Aí você pensa:</p>
+          <p><strong>Talvez você se reconheça em pelo menos um desses pontos:</strong></p>
           <ul class="bullet-list">
-            <li>“Minha voz é estranha.”</li>
-            <li>“Meu cenário é feio.”</li>
-            <li>“Não sei o que falar, vou errar.”</li>
-            <li>“Não tenho equipamento para gravar bonito.”</li>
+            <li>Você tem ideias, mas trava quando a câmera liga.</li>
+            <li>O cenário, a luz, o áudio… tudo parece “amador demais”.</li>
+            <li>Você sente vergonha da própria voz ou da imagem.</li>
+            <li>Falta tempo para gravar, editar e postar com consistência.</li>
           </ul>
-          <p>No fim, você fecha tudo e diz a frase que mais mata projetos:</p>
-          <p><strong>“Depois eu faço.”</strong></p>
-          <p>Mas esse “depois” vira meses. E a vontade de criar continua presa na sua cabeça.</p>
+          <p style="margin-top: 8px;">
+            No fim do dia, a sensação é sempre a mesma:
+            <strong>“Eu podia estar criando muito mais, mas continuo preso no mesmo lugar.”</strong>
+          </p>
         </div>
+
         <div class="highlight-box">
-          <strong>O que mudou o jogo?</strong>
+          <p><strong>A boa notícia:</strong></p>
           <p style="margin-top: 6px;">
-            A tecnologia hoje permite que você comece <strong>sem mostrar o rosto, sem gravar a própria voz e sem
-            ter um estúdio em casa</strong>.
+            A tecnologia tirou de você a obrigação de ser “apresentador de TV” logo de cara.
           </p>
           <p>
-            Em vez de esperar a coragem chegar, você cria <strong>um clone digital</strong> para ir na frente abrindo o caminho.
+            <strong>Em vez de esperar coragem para aparecer,</strong> você cria um clone digital que:
           </p>
-          <p>
-            Ele aparece, fala, olha para a câmera e grava por você — enquanto você continua trabalhando, estudando ou vivendo sua vida.
-          </p>
+          <ul class="bullet-list">
+            <li>Fala por você.</li>
+            <li>Olha para a câmera por você.</li>
+            <li>Grava no horário que for melhor para você.</li>
+          </ul>
+          <p>Você passa a focar na ideia e na mensagem — e deixa o resto na mão do clone.</p>
         </div>
       </div>
     </section>
@@ -688,38 +691,37 @@
     <!-- SEÇÃO 2 – O QUE VOCÊ VAI CRIAR -->
     <section class="section" id="sec-o-que-e">
       <div class="section-header">
-        <div class="section-kicker">O que você leva na prática</div>
-        <h2 class="section-title">Um clone digital completo: rosto, voz, estilo e presença.</h2>
+        <div class="section-kicker">Resultado final</div>
+        <h2 class="section-title">No final do curso, você sai com isso pronto:</h2>
         <p class="section-sub">
-          Não é só aprender ferramenta. É sair do curso com <strong>uma versão sua pronta</strong> para gravar todos os dias, no piloto semi-automático.
+          Nada de teoria solta. A ideia é que você termine com um clone digital funcional, pronto para gravar por você.
         </p>
       </div>
 
       <div class="two-columns">
         <div>
+          <p><strong>Você vai ter na mão:</strong></p>
           <ul class="bullet-list">
-            <li><strong>Rosto digital</strong> parecido com o seu, em estilo realista ou criativo.</li>
-            <li><strong>Voz clonada</strong> com clareza profissional, sem ruído e sem vergonha.</li>
-            <li><strong>Avatares temáticos</strong>: Corretor, Gamer, Influencer, Professor ou o personagem que você quiser.</li>
-            <li><strong>Vídeos prontos</strong> para Reels, TikTok, Shorts e YouTube.</li>
-            <li><strong>Capacidade de publicar todo dia</strong> sem ter que ligar a câmera todos os dias.</li>
+            <li><strong>Rosto digital</strong> inspirado em você, em versão realista ou criativa.</li>
+            <li><strong>Voz clonada</strong> com qualidade muito melhor do que a captação “crua” do celular.</li>
+            <li><strong>Avatares temáticos</strong>: Corretor, Gamer, Professor, Influencer ou qualquer persona que você quiser.</li>
+            <li><strong>Vídeos prontos</strong> para Reels, TikTok, Shorts e YouTube, já no formato certo.</li>
+            <li><strong>Fluxo simples</strong> para gerar novos vídeos com poucos cliques, sem precisar gravar tudo do zero.</li>
           </ul>
-          <div class="badge-row mt-12">
-            <div class="badge">Conteúdo diário sem aparecer</div>
-            <div class="badge">Visual profissional sem estúdio</div>
-            <div class="badge">Você controla cada detalhe</div>
-          </div>
         </div>
+
         <div class="highlight-box">
-          <p><strong>Você entra tímido, sobrecarregado e sem equipamento.</strong></p>
-          <p>Você sai com um clone digital pronto para:</p>
+          <p><strong>Em outras palavras:</strong></p>
+          <p style="margin-top: 6px;">
+            Você entra sem saber por onde começar e sai com um “você digital” capaz de:
+          </p>
           <ul class="bullet-list">
-            <li>Vender seus serviços.</li>
-            <li>Ensinar o que você sabe.</li>
-            <li>Construir autoridade.</li>
-            <li>Testar ideias sem se expor.</li>
+            <li>Explicar seus serviços.</li>
+            <li>Dar aulas e tutoriais.</li>
+            <li>Contar histórias, reviews ou análises.</li>
+            <li>Testar ideias de conteúdo sem precisar se expor.</li>
           </ul>
-          <p>E o melhor: <strong>sem precisar ser “bom de câmera”.</strong></p>
+          <p>É um ativo que continua trabalhando por você, enquanto você toca o resto da sua vida.</p>
         </div>
       </div>
     </section>
@@ -727,57 +729,76 @@
     <!-- SEÇÃO 3 – PRA QUEM É -->
     <section class="section" id="sec-publico">
       <div class="section-header">
-        <div class="section-kicker">Pra quem esse curso foi criado</div>
-        <h2 class="section-title">Feito para quem precisa aparecer… mas não quer ficar na frente da câmera.</h2>
+        <div class="section-kicker">Perfil ideal</div>
+        <h2 class="section-title">Se você se vê em um desses perfis, este curso é para você.</h2>
+        <p class="section-sub">
+          Não importa se você nunca abriu uma ferramenta de IA. O foco aqui é ajudar quem precisa aparecer — mas não quer ficar na frente da câmera.
+        </p>
       </div>
 
       <ul class="bullet-list">
-        <li><strong>Tímidos</strong> que querem começar a criar sem se expor de cara.</li>
-        <li><strong>Profissionais liberais</strong> (corretores, consultores, coaches, terapeutas) que precisam de vídeos para vender.</li>
-        <li><strong>Professores</strong> que querem transformar aula em vídeo sem gravar tudo de novo.</li>
-        <li><strong>Gamers e criadores</strong> que sonham com um “avatar próprio” com personalidade.</li>
-        <li><strong>Empreendedores</strong> que querem usar IA para produzir conteúdo em escala.</li>
-        <li><strong>Quem trabalha demais</strong> e precisa de uma forma inteligente de aparecer sem gastar horas por dia gravando.</li>
+        <li><strong>Tímidos</strong> que querem começar com segurança, sem se expor de cara.</li>
+        <li><strong>Profissionais liberais</strong> (corretores, consultores, coaches, terapeutas) que precisam de vídeos para vender e se posicionar.</li>
+        <li><strong>Professores e instrutores</strong> que querem transformar conhecimento em conteúdo sem gravar aula toda vez.</li>
+        <li><strong>Gamers e criadores</strong> que sonham com um avatar próprio, com personalidade e estilo.</li>
+        <li><strong>Donos de pequenos negócios</strong> que querem presença digital, mas não têm tempo para ser “influencer” full time.</li>
+        <li><strong>Pessoas ocupadas</strong> que sabem que conteúdo é importante, mas não conseguem encaixar gravação + edição na rotina.</li>
       </ul>
+
       <div class="bubble-list">
-        <li>Não precisa saber IA</li>
-        <li>Não precisa saber editar</li>
-        <li>Não precisa equipamento caro</li>
-        <li>Começa do zero</li>
+        <li>Começando do zero</li>
+        <li>Sem experiência com IA</li>
+        <li>Sem necessidade de equipamento caro</li>
+        <li>Com vontade real de tirar ideias do papel</li>
       </div>
     </section>
 
-    <!-- SEÇÃO 4 – COMO FUNCIONA O MÉTODO (MÓDULOS) -->
+    <!-- SEÇÃO 4 – MÉTODO / MÓDULOS -->
     <section class="section" id="sec-metodo">
       <div class="section-header">
         <div class="section-kicker">Passo a passo</div>
-        <h2 class="section-title">Como você sai do zero até seu clone gravando por você.</h2>
+        <h2 class="section-title">Veja como você sai do zero até o seu clone publicando por você.</h2>
+        <p class="section-sub">
+          Cada módulo foi pensado para ser direto, aplicável e sem enrolação. Você aprende, aplica e já vê algo pronto na tela.
+        </p>
       </div>
 
       <div class="two-columns">
         <div>
-          <h3 style="font-size: 0.95rem; margin-bottom: 6px;">Módulo 1 — IA na prática</h3>
-          <p>Você aprende, na prática, a usar IA para criar imagens e um mini gerador de prompts que ajuda a descrever seus avatares com nível profissional.</p>
+          <h3 style="font-size: 0.95rem; margin-bottom: 4px;">Módulo 1 — IA na prática, sem complicação</h3>
+          <p>
+            Você aprende a criar imagens e um mini gerador de prompts para descrever seus avatares com qualidade.
+            Nada de teoria pesada: é mão na massa.
+          </p>
 
-          <h3 style="font-size: 0.95rem; margin: 12px 0 6px;">Módulo 2 — Seu clone digital</h3>
-          <p>Configuração de ambiente, clonagem de rosto, estilo e voz. Aqui nasce o seu “você digital”.</p>
+          <h3 style="font-size: 0.95rem; margin: 12px 0 4px;">Módulo 2 — Seu clone digital ganha rosto e voz</h3>
+          <p>
+            Aqui você configura o ambiente, clona rosto, estilo e voz. É o nascimento oficial do seu “você digital”.
+          </p>
 
-          <h3 style="font-size: 0.95rem; margin: 12px 0 6px;">Módulo 3 — Avatares temáticos</h3>
-          <p>Corretor, Gamer, Professor, Influencer… ou qualquer versão que combine com o que você quer comunicar.</p>
+          <h3 style="font-size: 0.95rem; margin: 12px 0 4px;">Módulo 3 — Avatares para cada papel da sua vida</h3>
+          <p>
+            Corretor, Gamer, Professor, Influencer… você aprende a criar versões suas para cada contexto em que quer comunicar.
+          </p>
         </div>
-        <div>
-          <h3 style="font-size: 0.95rem; margin-bottom: 6px;">Módulo 4 — Conteúdo profissional</h3>
-          <p>Transforme seu clone em vídeos curtos, longos, thumbnails e peças visuais prontas para redes sociais.</p>
 
-          <h3 style="font-size: 0.95rem; margin: 12px 0 6px;">Módulo 5 — Publicação e crescimento</h3>
-          <p>Como publicar, organizar uma rotina leve e usar IA a seu favor para crescer, testar formatos e construir sua presença.</p>
+        <div>
+          <h3 style="font-size: 0.95rem; margin-bottom: 4px;">Módulo 4 — Transformando clone em conteúdo profissional</h3>
+          <p>
+            Vídeos curtos, vídeos longos, thumbnails e variações de conteúdo prontos para redes sociais. Você vê como combinar tudo.
+          </p>
+
+          <h3 style="font-size: 0.95rem; margin: 12px 0 4px;">Módulo 5 — Publicação, rotina e crescimento</h3>
+          <p>
+            Como organizar uma rotina leve de criação, usar IA a seu favor e crescer sem precisar virar escravo de produção.
+          </p>
 
           <div class="highlight-box" style="margin-top: 10px;">
-            <strong>Bônus:</strong>
+            <strong>Bônus direto ao ponto:</strong>
             <ul class="bullet-list" style="margin-top: 6px;">
-              <li>Biblioteca de prompts prontos.</li>
-              <li>Modelos de roteiros.</li>
-              <li>Estilos visuais para seus avatares.</li>
+              <li>Biblioteca de prompts prontos para acelerar seu processo.</li>
+              <li>Modelos de roteiros para vídeos curtos e longos.</li>
+              <li>Estilos visuais para personalizar seus avatares.</li>
             </ul>
           </div>
         </div>
@@ -787,10 +808,10 @@
     <!-- SEÇÃO 5 – OFERTA / PREÇO -->
     <section class="section" id="sec-checkout">
       <div class="section-header">
-        <div class="section-kicker">Investimento</div>
-        <h2 class="section-title">A forma mais rápida de produzir conteúdo profissional sem aparecer.</h2>
+        <div class="section-kicker">Investimento único</div>
+        <h2 class="section-title">Transforme timidez e falta de tempo em um sistema que grava por você.</h2>
         <p class="section-sub">
-          Em vez de gastar com câmeras, microfones e horas de gravação, você constrói um sistema que grava por você.
+          Em vez de gastar com câmera, microfone, luz e mais um monte de coisa, você investe em um processo que te acompanha por anos.
         </p>
       </div>
 
@@ -801,12 +822,12 @@
             <span>de R$ 1.400</span>
             <strong>por R$ 297</strong>
           </div>
-          <p class="price-parcel">Ou em até 12x no cartão, dependendo da plataforma de pagamento.</p>
-          <p class="price-highlight">Acesso completo à turma atual + atualizações que forem sendo adicionadas.</p>
+          <p class="price-parcel">Possibilidade de parcelamento em até 12x (dependendo da plataforma de pagamento).</p>
+          <p class="price-highlight">Acesso à turma atual e às atualizações que forem sendo adicionadas.</p>
 
           <div class="guarantee-box">
             <strong>Garantia incondicional de 7 dias.</strong><br />
-            Se dentro de 7 dias você sentir que o curso não é para você, é só pedir o reembolso e está tudo certo.
+            Se você sentir que o curso não é para você, é só pedir reembolso dentro desse prazo. Simples assim.
           </div>
 
           <div class="cta-full">
@@ -819,15 +840,15 @@
         <div class="highlight-box">
           <p><strong>O que você evita com esse investimento:</strong></p>
           <ul class="bullet-list">
-            <li>Gastar milhares com equipamento antes de saber se consegue gravar.</li>
-            <li>Ficar meses travado esperando “a coragem” chegar.</li>
-            <li>Depender de outra pessoa para aparecer e produzir conteúdo por você.</li>
+            <li>Gastar alto com equipamento antes de saber se consegue gravar.</li>
+            <li>Ficar meses empurrando o “projeto de conteúdo” com a barriga.</li>
+            <li>Depender de outras pessoas para aparecer por você.</li>
           </ul>
           <p><strong>O que você ganha:</strong></p>
           <ul class="bullet-list">
-            <li>Um clone digital pronto para ser usado em qualquer projeto.</li>
-            <li>A liberdade de publicar sem precisar vencer a timidez primeiro.</li>
-            <li>Um caminho claro de crescimento com IA aplicada ao seu dia a dia.</li>
+            <li>Um clone digital que pode ser usado em vários projetos.</li>
+            <li>Uma forma segura de começar, sem exposição direta.</li>
+            <li>Um caminho claro para construir presença e autoridade usando IA.</li>
           </ul>
         </div>
       </div>
@@ -836,19 +857,38 @@
     <!-- SEÇÃO 6 – SOBRE O INSTRUTOR -->
     <section class="section" id="sec-instrutor">
       <div class="section-header">
-        <div class="section-kicker">Quem vai te guiar</div>
-        <h2 class="section-title">Quem é o Maurício Grigol?</h2>
+        <div class="section-kicker">Bastidores</div>
+        <h2 class="section-title">Quem é o Maurício Grigol por trás do ME CLONEI?</h2>
+        <p class="section-sub">
+          Não é só sobre ferramenta. É sobre alguém que vive o que ensina, usando IA para criar conteúdo e protótipos no dia a dia.
+        </p>
       </div>
 
       <div class="two-columns">
         <div>
-          <p>Sou o criador da Teckbird e um obcecado em usar inteligência artificial para tirar ideias do papel — principalmente para quem não quer ou não consegue aparecer na frente da câmera.</p>
-          <p>Nos últimos anos mergulhei em ferramentas de IA, avatares, automações e formatos de conteúdo pensados para a vida real: quem trabalha, estuda, tem pouco tempo, mas sente que carrega um potencial criativo enorme.</p>
-          <p>Minha missão com o ME CLONEI é simples: <strong>te dar um atalho concreto entre o que você sente que nasceu para fazer e o que o mundo realmente vê.</strong></p>
+          <p>
+            Eu sou o criador da Teckbird e um curioso profissional por tecnologia aplicada à vida real.
+            Nos últimos anos mergulhei em inteligência artificial para criar avatares, automatizar conteúdo
+            e tirar ideias do papel muito mais rápido.
+          </p>
+          <p>
+            Meu foco sempre foi ajudar pessoas comuns — que trabalham, estudam, têm rotina corrida — a
+            usar IA para <strong>se expressar, vender e ensinar</strong> sem depender de estúdio, equipe ou agência.
+          </p>
+          <p>
+            No ME CLONEI, eu abro o meu processo: você vê o que eu faço, em qual ordem e com quais cuidados
+            para não perder tempo com ferramenta errada.
+          </p>
         </div>
+
         <div class="highlight-box">
-          <p><strong>Didática direta, sem enrolação.</strong> Você vai ver exatamente o que eu faço, quais botões aperto e como replicar no seu contexto.</p>
-          <p>Não é curso de teoria sobre IA. É você construindo seu clone, passo a passo.</p>
+          <p><strong>O que você pode esperar de mim no curso:</strong></p>
+          <ul class="bullet-list">
+            <li>Didática direta, sem enrolação e sem tecnicês desnecessário.</li>
+            <li>Foco em te fazer <strong>construir algo concreto</strong>, não só “entender o conceito”.</li>
+            <li>Olhar prático para quem está começando do zero.</li>
+          </ul>
+          <p>Você não precisa virar técnico de IA. Você precisa aprender o suficiente para colocar seu clone para trabalhar por você.</p>
         </div>
       </div>
     </section>
@@ -856,33 +896,52 @@
     <!-- SEÇÃO 7 – FAQ -->
     <section class="section" id="sec-faq">
       <div class="section-header">
-        <div class="section-kicker">Perguntas frequentes</div>
-        <h2 class="section-title">Ainda com dúvidas? Vamos clarear.</h2>
+        <div class="section-kicker">Dúvidas comuns</div>
+        <h2 class="section-title">Respostas rápidas antes de você tomar a decisão.</h2>
+        <p class="section-sub">
+          Leia como se fosse alguém respondendo suas perguntas no WhatsApp.
+        </p>
       </div>
 
       <details>
         <summary>Preciso aparecer em algum momento?</summary>
-        <p>Não é obrigatório. Você pode fazer todo o processo sem mostrar o rosto e sem gravar sua voz para o público. Em algumas ferramentas, você vai gravar um áudio ou vídeo de referência apenas para treinar o clone — esse material pode ficar totalmente privado.</p>
+        <p>
+          Não é obrigatório. Em algumas ferramentas, você grava um áudio ou vídeo apenas
+          para treinar o clone — esse material pode ficar totalmente privado. Para o público,
+          quem aparece é o avatar.
+        </p>
       </details>
 
       <details>
         <summary>Funciona só no computador ou também no celular?</summary>
-        <p>Muita coisa você consegue operar diretamente do celular. Ter um computador ajuda, mas não é obrigatório para começar.</p>
+        <p>
+          Dá para operar muita coisa direto do celular. Ter um computador ajuda em alguns passos,
+          mas não é um pré-requisito para você começar.
+        </p>
       </details>
 
       <details>
         <summary>Eu não entendo nada de IA. Vou conseguir acompanhar?</summary>
-        <p>Sim. O curso foi pensado para iniciantes. Cada passo é mostrado na tela, com clique a clique, sem termos complicados.</p>
+        <p>
+          Vai. O curso é pensado para iniciantes. Você acompanha o passo a passo na tela, com
+          instruções simples, como se estivesse olhando por cima do meu ombro.
+        </p>
       </details>
 
       <details>
         <summary>Vou poder criar mais de um avatar?</summary>
-        <p>Sim. Você vai aprender a lógica por trás da criação. A partir daí, pode criar quantos personagens e variações quiser.</p>
+        <p>
+          Sim. A ideia é justamente te dar a lógica por trás da criação, para que você possa
+          replicar quantas versões quiser: versões mais sérias, divertidas, jovens, formais, etc.
+        </p>
       </details>
 
       <details>
         <summary>E se eu não gostar ou achar que não é o momento?</summary>
-        <p>Você tem 7 dias para testar. Se não fizer sentido, é só pedir o reembolso dentro desse prazo.</p>
+        <p>
+          Você tem 7 dias para testar. Se dentro desse período sentir que não é para você,
+          é só pedir o reembolso. Sem burocracia.
+        </p>
       </details>
 
       <div class="cta-full">
@@ -907,7 +966,7 @@
 
   function goToCheckoutLink() {
     // TODO: trocar pela URL real do checkout (Hotmart/Monetizze/Kiwify/etc.)
-    window.location.href = "https://seu-checkout-aqui.com"; 
+    window.location.href = "https://seu-checkout-aqui.com";
   }
 </script>
 </body>
