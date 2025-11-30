@@ -570,22 +570,46 @@ footer a {
     max-width: 100%;
   }
 }
-/* NEON ROXO ESPECIAL — FRASE "CLONE DIGITAL" */
+/* NEON ROXO ESPECIAL — FRASE "CLONE DIGITAL" COM SCANNER CYBERPUNK */
 .neon-clone {
+  position: relative;
   font-weight: 700;
   color: transparent;
-  background: linear-gradient(90deg, #a855f7, #c084fc, #e9d5ff);
+  background: linear-gradient(
+    90deg,
+    #3b0764,
+    #a855f7,
+    #c084fc,
+    #e9d5ff,
+    #a855f7,
+    #3b0764
+  );
   -webkit-background-clip: text;
   background-clip: text;
   letter-spacing: -0.02em;
 
-  /* Glow forte e sofisticado */
+  /* faz o "scanner" correr no gradiente */
+  background-size: 300% 100%;
+  animation: neonScan 3s linear infinite;
+
   text-shadow:
-    0 0 15px rgba(168, 85, 247, 0.75),
-    0 0 32px rgba(168, 85, 247, 0.55),
-    0 0 55px rgba(168, 85, 247, 0.35),
+    0 0 15px rgba(168, 85, 247, 0.85),
+    0 0 32px rgba(168, 85, 247, 0.6),
+    0 0 55px rgba(168, 85, 247, 0.4),
     0 0 85px rgba(168, 85, 247, 0.25);
 }
+@keyframes neonScan {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
 
 
   </style>
