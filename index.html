@@ -29,8 +29,8 @@
       <div class="screen-inner">
         <p class="note-block">Nada começa antes da identidade estar clara.</p>
         <h2 class="screen-title" id="identity-question"></h2>
-        <label for="identity-input" class="screen-subtitle">Resposta curta</label>
-        <input class="input-field" id="identity-input" type="text" maxlength="140" autocomplete="off" />
+        <p class="screen-subtitle" id="identity-helper">Escolha uma opção.</p>
+        <div class="identity-options" id="identity-options" role="group" aria-label="Opções de identidade"></div>
         <div class="action-row">
           <button class="button" type="button" id="identity-continue">Continuar</button>
         </div>
@@ -40,11 +40,12 @@
     <section class="screen" data-screen="2">
       <div class="screen-inner">
         <h2 class="screen-title">Presença é escolha.<br />Volume é distração.</h2>
+        <p class="screen-subtitle">Escolha os formatos que exigem menos esforço de você.</p>
         <div class="cards" id="format-cards">
-          <button class="card-option" type="button" data-format="video">Vídeo</button>
-          <button class="card-option" type="button" data-format="text">Texto</button>
-          <button class="card-option" type="button" data-format="audio">Áudio</button>
-          <button class="card-option" type="button" data-format="visual">Visual Estático</button>
+          <button class="card-option" type="button" data-format="video">Vídeo — quando bem estruturado</button>
+          <button class="card-option" type="button" data-format="text">Texto — sem câmera</button>
+          <button class="card-option" type="button" data-format="audio">Áudio — sem aparecer</button>
+          <button class="card-option" type="button" data-format="visual">Visual — sem falar</button>
         </div>
         <div class="action-row">
           <button class="button" type="button" id="formats-continue" disabled>Continuar</button>
@@ -56,17 +57,17 @@
       <div class="screen-inner">
         <h2 class="screen-title">Sem estrutura, consistência vira desgaste.</h2>
         <div>
-          <p class="screen-subtitle">Ritmo desejado</p>
+          <p class="screen-subtitle">Pensando na sua rotina real, qual ritmo você conseguiria manter sem se cobrar?</p>
           <div class="choice-row" id="pace-options">
-            <button class="choice-button" type="button" data-pace="low">Baixo</button>
-            <button class="choice-button" type="button" data-pace="moderate">Moderado</button>
+            <button class="choice-button" type="button" data-pace="low">Baixo — mesmo com pouco tempo</button>
+            <button class="choice-button" type="button" data-pace="moderate">Moderado — sem precisar postar todo dia</button>
           </div>
         </div>
         <div>
-          <p class="screen-subtitle">Envolvimento humano</p>
+          <p class="screen-subtitle">Na prática, quanto disso você quer ter que fazer pessoalmente?</p>
           <div class="choice-row" id="involvement-options">
-            <button class="choice-button" type="button" data-involvement="minimal">Mínimo</button>
-            <button class="choice-button" type="button" data-involvement="moderate">Moderado</button>
+            <button class="choice-button" type="button" data-involvement="minimal">Mínimo — sistemas fazem a maior parte</button>
+            <button class="choice-button" type="button" data-involvement="moderate">Moderado — eu participo, mas não sustento tudo</button>
           </div>
         </div>
         <div class="action-row">

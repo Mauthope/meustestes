@@ -9,9 +9,36 @@ const PLACEHOLDER_IMAGE =
   "data:image/webp;base64,UklGRiIAAABXRUJQVlA4IBYAAAAwAQCdASoIAAIAAAAcJaQAA3AA/vuUAAA=";
 
 const identityQuestions = [
-  "O que você não aceita mais sustentar para crescer?",
-  "Que tipo de exposição você recusa, mesmo que funcione?",
-  "Qual limite sua presença digital nunca deve cruzar?",
+  {
+    question: "O que mais te atrapalha hoje na hora de criar conteúdo?",
+    options: [
+      "Ter que aparecer em vídeo o tempo todo",
+      "Gravar várias vezes até “ficar bom”",
+      "Criar conteúdo sem saber se alguém vai ver",
+      "Não conseguir manter frequência",
+      "Depender da minha disposição todos os dias",
+    ],
+  },
+  {
+    question: "O que você já cansou de fazer para tentar crescer na internet?",
+    options: [
+      "Aparecer constantemente",
+      "Postar todos os dias",
+      "Ficar seguindo tendência",
+      "Trabalhar mais horas",
+      "Viver correndo atrás de algoritmo",
+    ],
+  },
+  {
+    question: "O que você queria que fosse mais fácil quando pensa em criar conteúdo?",
+    options: [
+      "Continuar funcionando mesmo quando eu não posto",
+      "Me representar sem eu precisar aparecer",
+      "Reduzir o tempo que gasto criando conteúdo",
+      "Não depender da minha energia todo dia",
+      "Funcionar mesmo em semanas corridas",
+    ],
+  },
 ];
 
 const memoryStorage = new Map();
@@ -195,7 +222,7 @@ const loadingOverlay = document.getElementById("loading-overlay");
 
 const startButton = document.getElementById("start-button");
 const identityQuestion = document.getElementById("identity-question");
-const identityInput = document.getElementById("identity-input");
+const identityOptions = document.getElementById("identity-options");
 const identityContinue = document.getElementById("identity-continue");
 
 const formatCards = document.querySelectorAll("[data-format]");
@@ -259,8 +286,26 @@ function showToast(message) {
 
 function updateIdentityUI() {
   const step = state.identityStep ?? 0;
-  identityQuestion.textContent = identityQuestions[step];
-  identityInput.value = state.identityAnswers[step] || "";
+  const current = identityQuestions[step];
+  identityQuestion.textContent = current.question;
+  identityOptions.innerHTML = "";
+  current.options.forEach((option) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "identity-option";
+    button.textContent = option;
+    button.dataset.value = option;
+    button.classList.toggle(
+      "is-selected",
+      state.identityAnswers[step] === option
+    );
+    button.addEventListener("click", () => {
+      state.identityAnswers[step] = option;
+      saveState();
+      updateIdentityUI();
+    });
+    identityOptions.appendChild(button);
+  });
 }
 
 function updateFormatsUI() {
@@ -343,12 +388,11 @@ startButton.addEventListener("click", () => {
 });
 
 identityContinue.addEventListener("click", () => {
-  const answer = identityInput.value.trim();
+  const answer = state.identityAnswers[state.identityStep];
   if (!answer) {
-    showToast("Escreva uma resposta curta antes de continuar.");
+    showToast("Escolha uma opção antes de continuar.");
     return;
   }
-  state.identityAnswers[state.identityStep] = answer;
   state.identityStep += 1;
   if (state.identityStep >= identityQuestions.length) {
     saveState();
