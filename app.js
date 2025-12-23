@@ -275,6 +275,9 @@ function showScreen(index) {
   });
   state.currentScreen = bounded;
   document.body.className = `stage-${bounded}`;
+  if (bounded === 1) {
+    updateIdentityUI();
+  }
   if (bounded === 0) {
     progressIndicator.textContent = "";
   } else {
@@ -293,6 +296,7 @@ function showToast(message) {
 }
 
 function updateIdentityUI() {
+  if (!identityOptions || !identityQuestion) return;
   const maxStep = identityQuestions.length - 1;
   const step =
     typeof state.identityStep === "number" && state.identityStep >= 0
