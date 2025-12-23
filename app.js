@@ -2,8 +2,8 @@ const AULA1_URL = "https://exemplo.com/aula1";
 const WHATSAPP_NUMBER = "5549988971962";
 const WHATSAPP_MESSAGE =
   "Olá! Eu concluí minha Arquitetura da Presença Digital e quero receber o link da Aula 1 + minha Persona Digital.";
-const SUPABASE_URL = "https://SEU-PROJETO.supabase.co";
-const SUPABASE_ANON_KEY = "SUA_SUPABASE_ANON_KEY";
+const SUPABASE_URL = "https://vavbsdlxpmbcxsjsulki.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_UgTbSfksR2gM5fe9wHq3Tw_WurMwzp8";
 const SUPABASE_TABLE = "leads";
 
 const STORAGE_KEY = "mapaPresencaState";
