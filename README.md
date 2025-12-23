@@ -21,10 +21,10 @@ Acesse `http://localhost:8000`.
 
 ## Substituir imagens das personas
 
-As imagens `.webp` não são incluídas no repositório para evitar problemas com binários.
+As imagens `.png` não são incluídas no repositório para evitar problemas com binários.
 Para inserir suas imagens:
 
-1. Prepare imagens `.webp` (ex: `p01.webp`, `p02.webp`, ...).
+1. Prepare imagens `.png` (ex: `p01.png`, `p02.png`, ...).
 2. Coloque os arquivos em `assets/personas/` mantendo os nomes.
 3. Ajuste os caminhos e descrições no arquivo `data/personas.json` se necessário.
 

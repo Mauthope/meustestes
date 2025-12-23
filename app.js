@@ -68,7 +68,7 @@ const fallbackPersonas = [
     name: "Arquiteto Silencioso",
     description:
       "Presença técnica, consistente e de baixa exposição, guiada por precisão e foco.",
-    image: "assets/personas/p01.webp",
+    image: "assets/personas/p01.png",
     tags: {
       formats: ["text", "visual"],
       pace: "low",
@@ -79,7 +79,7 @@ const fallbackPersonas = [
     id: "p02",
     name: "Narrador Preciso",
     description: "Voz clara, narrativa enxuta e autoridade sem exageros.",
-    image: "assets/personas/p02.webp",
+    image: "assets/personas/p02.png",
     tags: {
       formats: ["audio", "text"],
       pace: "moderate",
@@ -90,7 +90,7 @@ const fallbackPersonas = [
     id: "p03",
     name: "Diretor de Ritmo",
     description: "Conteúdo em cadência moderada, com estrutura leve e decisão firme.",
-    image: "assets/personas/p03.webp",
+    image: "assets/personas/p03.png",
     tags: {
       formats: ["video", "text"],
       pace: "moderate",
@@ -101,7 +101,7 @@ const fallbackPersonas = [
     id: "p04",
     name: "Curador Visual",
     description: "Estética silenciosa, sinais visuais consistentes e pouca fricção.",
-    image: "assets/personas/p04.webp",
+    image: "assets/personas/p04.png",
     tags: {
       formats: ["visual", "text"],
       pace: "low",
@@ -112,7 +112,7 @@ const fallbackPersonas = [
     id: "p05",
     name: "Mentor Contido",
     description: "Ensino objetivo, presença controlada e foco em clareza.",
-    image: "assets/personas/p05.webp",
+    image: "assets/personas/p05.png",
     tags: {
       formats: ["video", "text"],
       pace: "low",
@@ -124,7 +124,7 @@ const fallbackPersonas = [
     name: "Sintetizador",
     description:
       "Resumo estratégico, conteúdo leve e entrega contínua sem desgaste.",
-    image: "assets/personas/p06.webp",
+    image: "assets/personas/p06.png",
     tags: {
       formats: ["text", "audio"],
       pace: "moderate",
@@ -135,7 +135,7 @@ const fallbackPersonas = [
     id: "p07",
     name: "Cartógrafo de Referência",
     description: "Presença visual estável, escolhas claras e mínima exposição.",
-    image: "assets/personas/p07.webp",
+    image: "assets/personas/p07.png",
     tags: {
       formats: ["visual", "audio"],
       pace: "low",
@@ -147,7 +147,7 @@ const fallbackPersonas = [
     name: "Moderador de Conversa",
     description:
       "Contato humano controlado com ritmo consistente e previsível.",
-    image: "assets/personas/p08.webp",
+    image: "assets/personas/p08.png",
     tags: {
       formats: ["audio", "video"],
       pace: "moderate",
@@ -158,7 +158,7 @@ const fallbackPersonas = [
     id: "p09",
     name: "Analista de Campo",
     description: "Conteúdo analítico e presença firme, sem excesso de volume.",
-    image: "assets/personas/p09.webp",
+    image: "assets/personas/p09.png",
     tags: {
       formats: ["text", "video"],
       pace: "moderate",
@@ -170,7 +170,7 @@ const fallbackPersonas = [
     name: "Arquiteta de Ecos",
     description:
       "Foco em repetição elegante e narrativa visual consistente.",
-    image: "assets/personas/p10.webp",
+    image: "assets/personas/p10.png",
     tags: {
       formats: ["visual", "video"],
       pace: "moderate",
@@ -181,7 +181,7 @@ const fallbackPersonas = [
     id: "p11",
     name: "Curador de Ritmo Baixo",
     description: "Presença discreta e consciente, com impacto gradual.",
-    image: "assets/personas/p11.webp",
+    image: "assets/personas/p11.png",
     tags: {
       formats: ["text", "audio"],
       pace: "low",
@@ -192,7 +192,7 @@ const fallbackPersonas = [
     id: "p12",
     name: "Atlas Premium",
     description: "Persona ampla para qualquer cenário quando o match não é preciso.",
-    image: "assets/personas/p12.webp",
+    image: "assets/personas/p12.png",
     tags: {
       formats: ["video", "text", "audio", "visual"],
       pace: "moderate",
