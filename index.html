@@ -14,12 +14,20 @@
         <p class="eyebrow">Mapa Interativo — Arquitetura da Presença Digital</p>
         <h1>Presença digital com elegância, ritmo e intenção.</h1>
         <p class="subtitle">
-          Uma página, uma decisão. Receba o acesso ao vídeo e ao contato direto no WhatsApp
-          assim que confirmar seu e-mail.
+          Confirme seu e-mail para desbloquear o vídeo completo e o contato direto no WhatsApp.
         </p>
         <div class="cta-card">
-          <div class="thumbnail">
+          <div class="thumbnail" id="thumbnail">
             <img src="assets/thumbnail.png" alt="Thumbnail do vídeo" loading="lazy" />
+            <span class="badge">Prévia exclusiva</span>
+          </div>
+          <div class="video-wrapper hidden" id="video-wrapper">
+            <div class="video-placeholder">
+              <p>Vídeo liberado</p>
+              <a class="primary" id="video-link" href="#" target="_blank" rel="noopener">
+                Abrir vídeo
+              </a>
+            </div>
           </div>
           <form class="email-form" id="email-form">
             <label for="email-input">Seu e-mail</label>
@@ -28,9 +36,6 @@
             <p class="helper" id="email-helper">Sem spam. Apenas o acesso e a próxima etapa.</p>
           </form>
           <div class="actions hidden" id="actions">
-            <a class="primary" id="video-link" href="#" target="_blank" rel="noopener">
-              Assistir vídeo agora
-            </a>
             <a class="secondary" id="whatsapp-link" href="#" target="_blank" rel="noopener">
               Continuar no WhatsApp
             </a>

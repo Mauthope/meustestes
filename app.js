@@ -11,6 +11,8 @@ const form = document.getElementById("email-form");
 const emailInput = document.getElementById("email-input");
 const status = document.getElementById("status");
 const actions = document.getElementById("actions");
+const thumbnail = document.getElementById("thumbnail");
+const videoWrapper = document.getElementById("video-wrapper");
 const videoLink = document.getElementById("video-link");
 const whatsappLink = document.getElementById("whatsapp-link");
 
@@ -56,7 +58,9 @@ async function saveEmailToSupabase(email) {
   }
 }
 
-function showActions() {
+function unlockAccess() {
+  thumbnail.classList.add("hidden");
+  videoWrapper.classList.remove("hidden");
   actions.classList.remove("hidden");
 }
 
@@ -76,8 +80,8 @@ form.addEventListener("submit", async (event) => {
   const result = await saveEmailToSupabase(email);
 
   if (result.ok || result.skipped) {
-    setStatus("Acesso liberado. Escolha como prefere continuar.");
-    showActions();
+    setStatus("Acesso liberado. O vídeo está disponível abaixo.");
+    unlockAccess();
     form.querySelector("button").disabled = true;
     emailInput.disabled = true;
     return;

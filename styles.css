@@ -97,12 +97,42 @@ h1 {
   border: 1px solid rgba(255, 255, 255, 0.08);
   aspect-ratio: 16 / 9;
   background: rgba(255, 255, 255, 0.03);
+  position: relative;
 }
 
 .thumbnail img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.badge {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  background: rgba(11, 14, 19, 0.85);
+  color: var(--text);
+  font-size: 0.75rem;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.video-wrapper {
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(160deg, rgba(18, 24, 34, 0.95), rgba(10, 14, 20, 0.95));
+  padding: 20px;
+}
+
+.video-placeholder {
+  display: grid;
+  gap: 12px;
+  text-align: center;
+}
+
+.video-placeholder p {
+  color: var(--muted);
 }
 
 .email-form {
