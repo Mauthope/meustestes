@@ -3,8 +3,8 @@ const WHATSAPP_NUMBER = "5549988971962";
 const WHATSAPP_MESSAGE =
   "Olá! Eu confirmei meu e-mail e quero continuar minha presença digital.";
 
-const SUPABASE_URL = "https://SEU-PROJETO.supabase.co";
-const SUPABASE_ANON_KEY = "SUA_SUPABASE_ANON_KEY";
+const SUPABASE_URL = "https://vavbsdlxpmbcxsjsulki.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_UgTbSfksR2gM5fe9wHq3Tw_WurMwzp8";
 const SUPABASE_TABLE = "leads";
 
 const emailInput = document.getElementById("email-input");
@@ -19,8 +19,8 @@ let emailSaved = false;
 
 function supabaseConfigured() {
   return (
-    SUPABASE_URL !== "https://SEU-PROJETO.supabase.co" &&
-    SUPABASE_ANON_KEY !== "SUA_SUPABASE_ANON_KEY"
+    SUPABASE_URL !== "https://vavbsdlxpmbcxsjsulki.supabase.co" &&
+    SUPABASE_ANON_KEY !== "sb_publishable_UgTbSfksR2gM5fe9wHq3Tw_WurMwzp8"
   );
 }
 
