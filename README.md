@@ -15,7 +15,7 @@ Acesse `http://localhost:8000`.
 No `app.js`, ajuste:
 
 ```js
-const VIDEO_URL = "https://seuvideo.com";
+const VIDEO_URL = "https://www.youtube.com/embed/VIDEO_ID";
 const WHATSAPP_NUMBER = "5549988971962";
 ```
 
@@ -53,7 +53,7 @@ with check (true);
 
 Coloque sua thumbnail em `assets/thumbnail.png`.
 
-## Página do vídeo
+## Vídeo do YouTube
 
-O envio do e-mail redireciona para `video.html`. Essa página usa o vídeo passado via URL
-(`video.html?video=...`) e exibe o botão de WhatsApp.
+Use um link embed do YouTube (`https://www.youtube.com/embed/VIDEO_ID`) ou um link comum
+(`https://www.youtube.com/watch?v=VIDEO_ID`). O app converte automaticamente para embed.

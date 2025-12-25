@@ -1,4 +1,4 @@
-const VIDEO_URL = "https://seuvideo.com";
+const VIDEO_URL = "https://www.youtube.com/embed/VIDEO_ID";
 const WHATSAPP_NUMBER = "5549988971962";
 const WHATSAPP_MESSAGE =
   "Olá! Eu confirmei meu e-mail e quero continuar minha presença digital.";
@@ -69,6 +69,21 @@ function isValidEmail(value) {
   return value.includes("@") && value.includes(".");
 }
 
+function normalizeVideoUrl(url) {
+  if (!url) return "";
+  if (url.includes("youtube.com/embed/")) return url;
+  if (url.includes("youtu.be/")) {
+    const id = url.split("youtu.be/")[1]?.split(/[?&]/)[0];
+    return id ? `https://www.youtube.com/embed/${id}` : url;
+  }
+  if (url.includes("youtube.com/watch")) {
+    const params = new URL(url).searchParams;
+    const id = params.get("v");
+    return id ? `https://www.youtube.com/embed/${id}` : url;
+  }
+  return url;
+}
+
 function getStoredCount() {
   try {
     const stored = localStorage.getItem(COUNTER_KEY);
@@ -123,13 +138,17 @@ function unlockVideo() {
   thumbnail.classList.add("hidden");
   videoWrapper.classList.remove("hidden");
   actions.classList.remove("hidden");
-  videoIframe.src = VIDEO_URL;
+  videoIframe.src = normalizeVideoUrl(VIDEO_URL);
 }
 
 async function handleWatchClick() {
   const email = emailInput.value.trim();
   if (!email || !isValidEmail(email)) {
     setStatus("Digite um e-mail válido para liberar o acesso.");
+    return;
+  }
+  if (!VIDEO_URL || VIDEO_URL.includes("VIDEO_ID")) {
+    setStatus("Configure o link do vídeo antes de liberar o acesso.");
     return;
   }
 
