@@ -1,4 +1,4 @@
-const VIDEO_URL = "https://youtu.be/oDFEabgnR_c";
+const VIDEO_URL = "https://www.youtube.com/watch?v=oDFEabgnR_c";
 const WHATSAPP_NUMBER = "5549988971962";
 const WHATSAPP_MESSAGE =
   "Olá! Eu confirmei meu e-mail e quero continuar minha presença digital.";
