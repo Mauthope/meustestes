@@ -224,6 +224,18 @@ h1 {
   background: transparent;
 }
 
+.secondary.learn-more {
+  border-color: rgba(255, 77, 94, 0.6);
+  color: #ff4d5e;
+  background: rgba(255, 77, 94, 0.08);
+  box-shadow: 0 0 18px rgba(255, 77, 94, 0.35), 0 0 36px rgba(255, 77, 94, 0.25);
+}
+
+.secondary.learn-more:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 24px rgba(255, 77, 94, 0.5), 0 0 48px rgba(255, 77, 94, 0.35);
+}
+
 .secondary.whatsapp {
   border-color: rgba(60, 255, 154, 0.5);
   color: var(--neon-green);
