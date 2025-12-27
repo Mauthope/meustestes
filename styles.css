@@ -225,15 +225,15 @@ h1 {
 }
 
 .secondary.learn-more {
-  border-color: rgba(255, 77, 94, 0.6);
-  color: #ff4d5e;
-  background: rgba(255, 77, 94, 0.08);
-  box-shadow: 0 0 18px rgba(255, 77, 94, 0.35), 0 0 36px rgba(255, 77, 94, 0.25);
+  border-color: rgba(255, 56, 74, 0.75);
+  color: #ff3a4d;
+  background: rgba(255, 56, 74, 0.12);
+  box-shadow: 0 0 20px rgba(255, 56, 74, 0.5), 0 0 40px rgba(255, 56, 74, 0.35);
 }
 
 .secondary.learn-more:hover {
   transform: translateY(-1px);
-  box-shadow: 0 0 24px rgba(255, 77, 94, 0.5), 0 0 48px rgba(255, 77, 94, 0.35);
+  box-shadow: 0 0 28px rgba(255, 56, 74, 0.65), 0 0 54px rgba(255, 56, 74, 0.45);
 }
 
 .secondary.whatsapp {
