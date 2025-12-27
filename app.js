@@ -2,10 +2,10 @@ const VIDEO_URL = "https://www.youtube.com/embed/dQw4w9WgXcQ";
 const WHATSAPP_NUMBER = "5549988971962";
 const WHATSAPP_MESSAGE =
   "Olá! Eu confirmei meu e-mail e quero continuar minha presença digital.";
-const LEARN_MORE_URL = "https://seulink.com";
+const LEARN_MORE_URL = "https://go.hotmart.com/H102137847D";
 
-const SUPABASE_URL = "https://SEU-PROJETO.supabase.co";
-const SUPABASE_ANON_KEY = "SUA_SUPABASE_ANON_KEY";
+const SUPABASE_URL = "https://vavbsdlxpmbcxsjsulki.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_UgTbSfksR2gM5fe9wHq3Tw_WurMwzp8";
 const SUPABASE_TABLE = "leads";
 const COUNTER_KEY = "apd_access_count";
 const COUNTER_SESSION_KEY = "apd_access_session";
@@ -24,8 +24,8 @@ const learnMoreLink = document.getElementById("learn-more");
 
 function supabaseConfigured() {
   return (
-    SUPABASE_URL !== "https://SEU-PROJETO.supabase.co" &&
-    SUPABASE_ANON_KEY !== "SUA_SUPABASE_ANON_KEY"
+    SUPABASE_URL !== "https://vavbsdlxpmbcxsjsulki.supabase.co" &&
+    SUPABASE_ANON_KEY !== "sb_publishable_UgTbSfksR2gM5fe9wHq3Tw_WurMwzp8"
   );
 }
 
